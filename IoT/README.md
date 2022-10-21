@@ -79,14 +79,11 @@ To allow only the IoT receiver's IP to communicate with the IoT Server, simply r
 
 ### IoT Server socket address
 
-In the `IoTServer.py`, modify the `LHOST` to the IoT server's IP address.
+In the `config.py`, modify the `ip` to the IoT server's IP address.
 
 ```
-...
-LPORT = 1337
-# Replace with IoT Server's IP address (NUS)
-LHOST = "<NUS-VM-IP>"
-...
+# Replace with Server IP.
+ip="127.0.0.1"
 ```
 
 ### Setting up
