@@ -12,7 +12,7 @@
 ```
 cd ~
 git clone <Track2Gather-repo-url>
-cd IFS4205-AY2223-S1-G2-Track2Gather/IoT/IoTServer
+cd IFS4205-AY2223-S1-G2-Track2Gather/IoT/IoTServer/
 ```
 
 > From here on, all instructions for IoT Server are relative to current working directory i.e. `IoTServer/`
@@ -28,7 +28,7 @@ List of manual configurations needed, before running the setting up the IoT serv
 
 ### SFTP User Credentials
 
-In the `Helpers/add_user.sh` file, replace `REDACTED` with the intended `sftp` user password.
+In the `Helpers/adduser.sh` file, replace `REDACTED` with the intended `sftp` user password.
 
 ```
 #!/bin/bash

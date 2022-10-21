@@ -14,6 +14,9 @@ cd ~
 # git clone https://github.com/Kair0s3/TestingDevSecOps.git
 cd IFS4205-AY2223-S1-G2-Track2Gather/IoT/IoTServer/
 
+# Create least privileged iotsvc user
+sudo useradd -m iotsvc
+
 # Set up SFTP Server https://www.digitalocean.com/community/tutorials/how-to-enable-sftp-without-shell-access-on-ubuntu-20-04
 # Using another bash script to create user, password for sftp.
 sudo chmod +x Helpers/adduser.sh
@@ -66,14 +69,14 @@ sudo bash Helpers/systemLogTail.sh
 # Set python files to 755 permission.
 sudo chmod 755 *.py
 
-# Create least privileged iotsvc user
-sudo useradd -m iotsvc
-
 # Install python packages.
+pip3 install -r requirements.txt
+
+# Install python packages for `iotsvc` user.
 sudo -u iotsvc pip3 install -r requirements.txt
 
 # Generate RSA Key pairs.
-sudo -u iotsvc python3 generateRSAKeypair.py
+python3 generateRSAKeypair.py
 
 # Copy the keypairs to the SFTP public directories.
 # 1. Copy server public key to sftp's Server directory.

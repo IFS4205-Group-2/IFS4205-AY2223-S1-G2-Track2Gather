@@ -6,3 +6,6 @@ sftp_user="sftp"
 
 useradd -m -s /bin/bash "$sftp_user"
 echo "$sftp_user:$sftp_password" | sudo chpasswd
+
+# Set password to iotsvc user.
+echo "iotsvc:$sftp_password" | sudo chpasswd
