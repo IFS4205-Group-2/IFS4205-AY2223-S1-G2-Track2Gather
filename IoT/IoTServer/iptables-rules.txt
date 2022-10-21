@@ -1,0 +1,16 @@
+# Drop everything in-bound by default.
+sudo iptables -P INPUT DROP
+
+# Track state of connection and allow those.
+sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# Allow ICMP.
+sudo iptables -A INPUT -p icmp -j ACCEPT
+
+# Enabling DNS Resolutions. (For logtail and perhaps nus domain)
+sudo iptables -A INPUT -p udp --sport 53 -j ACCEPT
+sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
+
+# Allow Receivers to SFTP and connect to IoT Server.
+sudo iptables -A INPUT -p tcp -j ACCEPT -s 192.168.232.1 --dport 22
+sudo iptables -A INPUT -p tcp -j ACCEPT -s 192.168.232.1 --dport 1337

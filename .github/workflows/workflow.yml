@@ -1,0 +1,13 @@
+name: DevSecOps
+on: [pull_request, push, workflow_dispatch]
+jobs:
+  code_analysis:
+    name: SAST (semgrep)
+    runs-on:  ubuntu-20.04
+    container:
+      image: returntocorp/semgrep
+    steps:
+      - uses: actions/checkout@v3
+      - run: semgrep ci --verbose
+        env:
+          SEMGREP_RULES: p/ci

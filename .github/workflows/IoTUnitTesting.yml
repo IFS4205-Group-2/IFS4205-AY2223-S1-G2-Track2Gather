@@ -1,0 +1,53 @@
+name: IoT Unit Testing
+
+on:
+  push:
+  pull_request:
+    paths:
+      - 'IoT/**'
+
+jobs:
+  iot-unit-testing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install python3 packages.
+        working-directory: IoT/
+        run: pip install -r IoTServer/requirements.txt
+
+      - name: Install bluez to enable bluetoothctl.
+        run: |
+          sudo apt-get install bluez
+
+      - name: Manually copy one of adafruit bug, python file.
+        working-directory: IoT/
+        run : |
+          sudo cp GMS/gmsservice.py /opt/hostedtoolcache/Python/3.9.14/x64/lib/python3.9/site-packages/adafruit_ble/services/
+
+      - name: Run unit tests.
+        working-directory: IoT/test/
+        run: python -m unittest discover -s . -p "IoT*Tests.py"
+  ip-tables-testing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Setting up iptables."
+        working-directory: IoT/
+        run: |
+          sudo iptables -F
+          cp IoTServer/iptables-rules.txt test-iptables.sh
+          chmod +x test-iptables.sh
+          ./test-iptables.sh
+          cp test/iptables/github-actions-expected-iptables.txt /tmp/expected-iptables.txt
+
+      - name: "Testing if iptables configuration is correct."
+        uses: GuillaumeFalourd/assert-command-line-output@v2
+        with:
+          command_line: sudo iptables -L
+          assert_file_path: /tmp/expected-iptables.txt
+          expected_result: PASSED

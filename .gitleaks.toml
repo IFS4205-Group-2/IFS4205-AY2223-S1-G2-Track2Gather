@@ -1,0 +1,96 @@
+# Title for the gitleaks configuration file.
+title = "Gitleaks Configuration"
+
+# Extend the base (this) configuration. When you extend a configuration
+# the base rules take precendence over the extended rules. I.e, if there are
+# duplicate rules in both the base configuration and the extended configuration
+# the base rules will override the extended rules.
+# Another thing to know with extending configurations is you can chain together
+# multiple configuration files to a depth of 2. Allowlist arrays are appended
+# and can contain duplicates.
+# useDefault and path can NOT be used at the same time. Choose one.
+[extend]
+# useDefault will extend the base configuration with the default gitleaks config:
+# https://github.com/zricethezav/gitleaks/blob/master/config/gitleaks.toml
+useDefault = true
+# or you can supply a path to a configuration. Path is relative to where gitleaks
+# was invoked, not the location of the base config.
+# path = "common_config.toml"
+
+# An array of tables that contain information that define instructions
+# on how to detect secrets
+[[rules]]
+id = "logtail-source-token"
+# Short human readable description of the rule.
+description = "LogTail Source Token"
+
+# Golang regular expression used to detect secrets. Note Golang's regex engine
+# does not support lookaheads.
+regex = '''(?i)(?:source_token|token|logtail_token)(?:\w|\s*?)(?:=){1}(?:\s{0,10})[\"'](.*?)[\"']'''
+
+# Golang regular expression used to match paths. This can be used as a standalone rule or it can be used
+# in conjunction with a valid `regex` entry.
+path = '''^(.*?)\.(?:py|js)$'''
+
+# Array of strings used for metadata and reporting purposes.
+tags = ["logtail", "hardcoded", "source token"]
+
+[rules.allowlist]
+description = "LogTail Source Token has been REDACTED or is part of Unit Testing. No leaks."
+regexes = [
+  '''REDACTED''',
+  '''TEST'''
+]
+
+# An array of tables that contain information that define instructions
+# on how to detect secrets
+[[rules]]
+id = "sftp-password"
+# Short human readable description of the rule.
+description = "SFTP Password"
+
+# Golang regular expression used to detect secrets. Note Golang's regex engine
+# does not support lookaheads.
+regex = '''(?i)(?:sftp_password|sftp_pass)(?:\w|\s*?)(?:=){1}(?:\s{0,10})[\"'](.*?)[\"']'''
+
+# Golang regular expression used to match paths. This can be used as a standalone rule or it can be used
+# in conjunction with a valid `regex` entry.
+path = '''^(.*?)\.(?:py|js)$'''
+
+# Array of strings used for metadata and reporting purposes.
+tags = ["sftp", "hardcoded", "sftp password"]
+
+[rules.allowlist]
+description = "SFTP password has been REDACTED. No leaks."
+regexes = [
+  '''REDACTED'''
+]
+
+[allowlist]
+description = "Global Allow List"
+paths = [
+  # To omit checking of keypairs used for testing only.
+  '''TestKeys\/.*'''
+]
+
+[[rules]]
+id = "psql-password"
+# Short human readable description of the rule.
+description = "PostgreSQL password"
+
+# Golang regular expression used to detect secrets. Note Golang's regex engine
+# does not support lookaheads.
+regex = '''(?i)(?:psql_password|psql_pass)(?:\w|\s*?)(?:=){1}(?:\s{0,10})[\"'](.*?)[\"']'''
+
+# Golang regular expression used to match paths. This can be used as a standalone rule or it can be used
+# in conjunction with a valid `regex` entry.
+path = '''^(.*?)\.(?:py|js)$'''
+
+# Array of strings used for metadata and reporting purposes.
+tags = ["psql", "hardcoded", "psql password"]
+
+[rules.allowlist]
+description = "PostgreSQL password has been REDACTED. No leaks."
+regexes = [
+  '''REDACTED'''
+]
