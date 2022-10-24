@@ -9,4 +9,4 @@ sftp_password="REDACTED"
 psql_password="REDACTED"
 
 # Replace with Server IP.
-ip="127.0.0.1"
+address="127.0.0.1"

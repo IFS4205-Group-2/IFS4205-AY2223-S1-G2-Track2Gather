@@ -27,7 +27,7 @@ serverGenDirectory = f"{sftp_home}/ServerGenKeys/"
 LPORT = 1337
 
 # Replace with IoT Server's IP address (NUS)
-LHOST = config.ip
+LHOST = config.address
 
 SIG_BYTES = 64
 
