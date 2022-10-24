@@ -8,7 +8,7 @@ import {
   Tr
 } from "@chakra-ui/react";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 const FetchedData = [
