@@ -21,12 +21,13 @@ sftp_home = "/home/sftp"
 
 secretDirectory = f"{cwd}/Secret/"
 
-donglesDirectory = f"{sftp_home}/Receiver/"
+donglesDirectory = f"{sftp_home}/Dongles/"
 serverGenDirectory = f"{sftp_home}/ServerGenKeys/"
 
 LPORT = 1337
 
-LHOST = config.ip
+# Replace with IoT Server's IP address (NUS)
+LHOST = "127.0.0.1"
 
 SIG_BYTES = 64
 
@@ -110,7 +111,7 @@ def sendToDB2(macAddress, location, current_time, payload):
     cursor = dbConn.cursor()
     query = "CALL add_tracingRecord(%s::macaddr, %s, %s, %s);"
     RSSI = getData(payload)
-    parameters = (macAddress, current_time, location, RSSI)
+    parameters = (macAddress.decode(), current_time.decode(), location.decode(), RSSI.decode())
     cursor.execute(query, parameters)
     dbConn.close()
 
@@ -219,6 +220,8 @@ def main():
         startIotServer()
     except KeyboardInterrupt:
         logger.info("IoT Server has been stopped by keyboard interrupt.")
+    except Exception as e:
+        logger.info(e)
 
 if __name__ == "__main__":
     main()
