@@ -6,7 +6,7 @@ import HealthAuthorityDashboard from "../components/Dashboard/HealthAuthority/He
 
 export default function Dashboard() {
   // TODO: fetch role from JWT token
-  const userRole = 'healthAuthority';
+  const userRole = 'contactTracer';
 
   return (
     <>
