@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 
 import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 const FetchedData = [
   {
@@ -33,7 +34,21 @@ const FetchedData = [
   },
 ];
 export default function CloseContactInformation() {
-  const [data, setData] = useState(FetchedData);
+  const { data: records, isSuccess } = useQuery(["records"], async () => {
+    const res = await fetch("http://localhost:4000/tracing/records");
+    const data = await res.json();
+    return data;
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setData(records);
+    }
+
+    return () => {};
+  }, [isSuccess, records]);
+
+  const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
 
   const getSortedData = (sortBy) => {
@@ -54,44 +69,9 @@ export default function CloseContactInformation() {
     setData(dataToSort);
   };
 
-  const filterTable = (e) => {
-    let filterFunc = (item) => {
-      if (
-        item.infectant.indexOf(e) >= 0 ||
-        item.contactNumber.indexOf(e) >= 0
-      )
-        return true;
-    };
 
-    let dataForState = FetchedData.filter((item) => filterFunc(item));
-    setData(dataForState);
-  };
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginBottom: 20,
-        }}
-      >
-
-        <p>Search for:</p>
-        <input
-          type="text"
-          onChange={(e) => filterTable(e.target.value)}
-          placeholder="Search for Infectant or Contact..."
-          style={{
-            background: "rgba(0,0,0,0.2)",
-            borderRadius: 5,
-            marginLeft: 20,
-            paddingLeft: 10,
-            paddingRight: 10,
-            width: 350,
-            height: 30
-          }}
-        />
-      </div>
       <TableContainer>
         <Table variant="simple" colorScheme={"facebook"}>
           <Thead>
