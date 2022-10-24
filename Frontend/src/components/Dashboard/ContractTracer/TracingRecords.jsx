@@ -10,34 +10,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 
-const FetchedData = [
-  {
-    infectant1: "Alice",
-    infectant2: " Bernard",
-    time: "2020/12/11 09:12 AM",
-  },
-  {
-    infectant1: "David",
-    infectant2: "Claria",
-    time: "2022/05/16 02:15 AM",
-  },
-  {
-    infectant1: "Claria",
-    infectant2: "David",
-    time: "2021/07/13 09:12 PM",
-  },
-  {
-    infectant1: "Claria",
-    infectant2: "Emily",
-    time: "2020/03/18 04:42 AM",
-  },
-  {
-    infectant1: "Sandy",
-    infectant2: "Bernard",
-    time: "2021/01/14 09:15 AM",
-  },
-];
-
 export default function TracingRecords() {
   const { data: records, isSuccess } = useQuery(["records"], async () => {
     const res = await fetch("http://localhost:4000/tracing/records");
@@ -46,9 +18,6 @@ export default function TracingRecords() {
   });
 
   const [data, setData] = useState([]);
-
-  // const [data, setData] = useState(FetchedData);
-
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -67,8 +36,6 @@ export default function TracingRecords() {
   const getSortedData = (sortBy, val) => {
     if (!isSuccess) return [];
     const dataToSort = records.slice().sort((a, b) => {
-      // let dataToSort = data;
-      // dataToSort.sort((a, b) => {
       let aVal = a[sortBy];
       let bVal = b[sortBy];
       switch (typeof aVal) {
@@ -99,7 +66,6 @@ export default function TracingRecords() {
     setData(dataForState);
   };
 
-  // useEffect(() => {}, [inf1, inf2, inf3]);
   return (
     <>
       <div

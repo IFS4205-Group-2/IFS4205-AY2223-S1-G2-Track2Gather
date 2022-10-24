@@ -20,7 +20,7 @@ app.use(helmet());
 app.use(cors(corsConfig));
 app.use(express.json());
 app.use("/auth", authRouter);
-app.use('/tracing', recordRouter);
+app.use("/tracing", recordRouter);
 app.set("trust proxy", 1); //???
 
 io.use(authorizeUser); //???
