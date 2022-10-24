@@ -83,14 +83,14 @@ export default function TracingRecords() {
     if (!isSuccess) return [];
     let filterFunc = (item) => {
       if (
-        item.infectant1.indexOf(e) >= 0 ||
-        item.infectant2.indexOf(e) >= 0 ||
-        item.time.indexOf(e) >= 0
+        item.inf1.indexOf(e) >= 0 ||
+        item.inf2.indexOf(e) >= 0 ||
+        item.inf3.indexOf(e) >= 0
       )
         return true;
     };
 
-    let dataForState = records.filter((item) => filterFunc(item));
+    let dataForState = FetchedData.filter((item) => filterFunc(item));
     setData(dataForState);
   };
 
@@ -156,9 +156,9 @@ export default function TracingRecords() {
           <Tbody>
             {data.map((item, i) => (
               <Tr key={i.toString()}>
-                <Td>{item.closecontactuid}</Td>
-                <Td>{item.uid}</Td>
-                <Td>{item.time}</Td>
+                <Td>{item.inf1}</Td>
+                <Td>{item.inf2}</Td>
+                <Td>{item.inf3}</Td>
               </Tr>
             ))}
           </Tbody>
