@@ -17,6 +17,11 @@ cd IFS4205-AY2223-S1-G2-Track2Gather/IoT/IoTServer/
 # Create least privileged iotsvc user
 sudo useradd -m iotsvc
 
+# Make directory for iotsvc
+sudo mkdir -p /home/iotsvc
+sudo chown iotsvc:iotsvc /home/iotsvc
+sudo chmod 755 /home/iotsvc
+
 # Set up SFTP Server https://www.digitalocean.com/community/tutorials/how-to-enable-sftp-without-shell-access-on-ubuntu-20-04
 # Using another bash script to create user, password for sftp.
 sudo chmod +x Helpers/adduser.sh
