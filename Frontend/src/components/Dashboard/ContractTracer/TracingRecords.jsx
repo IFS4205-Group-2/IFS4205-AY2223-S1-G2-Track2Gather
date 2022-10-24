@@ -7,8 +7,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-
-import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
 
 const FetchedData = [
   {
@@ -37,20 +37,45 @@ const FetchedData = [
     time: "2021/01/14 09:15 AM",
   },
 ];
+
 export default function TracingRecords() {
-  const [data, setData] = useState(FetchedData);
+  const { data: records, isSuccess } = useQuery(["records"], async () => {
+    const res = await fetch("http://localhost:4000/tracing/records");
+    const data = await res.json();
+    return data;
+  });
+
+  const [data, setData] = useState([]);
+
+  // const [data, setData] = useState(FetchedData);
+
   const [count, setCount] = useState(0);
 
-  const getSortedData = (sortBy) => {
-    let dataToSort = data;
-    dataToSort.sort((a, b) => {
+  useEffect(() => {
+    if (isSuccess) {
+      setData(records);
+    }
+
+    return () => {};
+  }, [isSuccess, records]);
+
+  // codes for sort direction
+  const [inf1, setInf1] = useState(0);
+  const [inf2, setInf2] = useState(0);
+  const [inf3, setInf3] = useState(0);
+
+  const getSortedData = (sortBy, val) => {
+    if (!isSuccess) return [];
+    const dataToSort = records.slice().sort((a, b) => {
+      // let dataToSort = data;
+      // dataToSort.sort((a, b) => {
       let aVal = a[sortBy];
       let bVal = b[sortBy];
       switch (typeof aVal) {
         case "string":
-          return aVal.localeCompare(bVal);
+          return val ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
         case "number":
-          return aVal - bVal;
+          return val ? aVal - bVal : bVal - aVal;
         default:
           throw new Error("Unsupported value to sort by");
       }
@@ -60,6 +85,7 @@ export default function TracingRecords() {
   };
 
   const filterTable = (e) => {
+    if (!isSuccess) return [];
     let filterFunc = (item) => {
       if (
         item.infectant1.indexOf(e) >= 0 ||
@@ -72,6 +98,8 @@ export default function TracingRecords() {
     let dataForState = FetchedData.filter((item) => filterFunc(item));
     setData(dataForState);
   };
+
+  // useEffect(() => {}, [inf1, inf2, inf3]);
   return (
     <>
       <div
@@ -81,7 +109,6 @@ export default function TracingRecords() {
           marginBottom: 20,
         }}
       >
-
         <p>Search for:</p>
         <input
           type="text"
@@ -94,7 +121,7 @@ export default function TracingRecords() {
             paddingLeft: 10,
             paddingRight: 10,
             width: 350,
-            height: 30
+            height: 30,
           }}
         />
       </div>
@@ -103,19 +130,28 @@ export default function TracingRecords() {
           <Thead>
             <Tr>
               <Th
-                onClick={() => getSortedData("infectant1")}
+                onClick={() => {
+                  getSortedData("infectant1", inf1);
+                  setInf1(!inf1);
+                }}
                 style={{ cursor: "pointer" }}
               >
                 Infectant 1
               </Th>
               <Th
-                onClick={() => getSortedData("infectant2")}
+                onClick={() => {
+                  getSortedData("infectant2", inf2);
+                  setInf2(!inf2);
+                }}
                 style={{ cursor: "pointer" }}
               >
                 Infectant 2
               </Th>
               <Th
-                onClick={() => getSortedData("time")}
+                onClick={() => {
+                  getSortedData("time", inf3);
+                  setInf3(!inf3);
+                }}
                 style={{ cursor: "pointer" }}
               >
                 Time of Close Contact
@@ -125,8 +161,8 @@ export default function TracingRecords() {
           <Tbody>
             {data.map((item, i) => (
               <Tr key={i.toString()}>
-                <Td>{item.infectant1}</Td>
-                <Td>{item.infectant2}</Td>
+                <Td>{item.closecontactuid}</Td>
+                <Td>{item.uid}</Td>
                 <Td>{item.time}</Td>
               </Tr>
             ))}

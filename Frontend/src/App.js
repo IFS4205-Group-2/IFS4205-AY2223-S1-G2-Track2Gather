@@ -1,13 +1,17 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import UserContext from "./components/AccountContext";
 import ToggleColorMode from "./components/ToggleColorMode";
 import Views from "./components/Views";
-import UserContext from "./components/AccountContext";
 
+const queryClient = new QueryClient();
 
 function App() {
   return (
     <UserContext>
-      <Views />
-      <ToggleColorMode />
+      <QueryClientProvider client={queryClient}>
+        <Views />
+        <ToggleColorMode />
+      </QueryClientProvider>
     </UserContext>
   );
 }
