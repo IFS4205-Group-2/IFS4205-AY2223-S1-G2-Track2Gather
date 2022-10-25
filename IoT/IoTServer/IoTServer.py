@@ -21,11 +21,12 @@ sftp_home = "/home/sftp"
 
 secretDirectory = f"{cwd}/Secret/"
 
-donglesDirectory = f"{sftp_home}/Receiver/"
+donglesDirectory = f"{sftp_home}/Dongles/"
 serverGenDirectory = f"{sftp_home}/ServerGenKeys/"
 
 LPORT = 1337
 
+# Replace with IoT Server's IP address (NUS)
 LHOST = config.ip
 
 SIG_BYTES = 64
@@ -110,7 +111,7 @@ def sendToDB2(macAddress, location, current_time, payload):
     cursor = dbConn.cursor()
     query = "CALL add_tracingRecord(%s::macaddr, %s, %s, %s);"
     RSSI = getData(payload)
-    parameters = (macAddress, current_time, location, RSSI)
+    parameters = (macAddress.decode(), current_time.decode(), location.decode(), RSSI.decode())
     cursor.execute(query, parameters)
     dbConn.close()
 
@@ -187,10 +188,15 @@ def startIotServer():
         while 1:
             forceReset = False
             try:
+                conn.settimeout(10)
                 data = conn.recv(1024)
             except ConnectionResetError:
                 logForciblyClosedConnection(address[0])
                 forceReset = True
+                break
+            except socket.timeout:
+                forceReset = True
+                logger.info("Connection Timed out", extra={'Host': address[0]})
                 break
             if not data:
                 break
@@ -215,10 +221,13 @@ def startIotServer():
             logCloseconnection(address[0])
 
 def main():
-    try:
-        startIotServer()
-    except KeyboardInterrupt:
-        logger.info("IoT Server has been stopped by keyboard interrupt.")
+    while 1:
+        try:
+            startIotServer()
+        except KeyboardInterrupt:
+            logger.info("IoT Server has been stopped by keyboard interrupt.")
+        except Exception as e:
+            logger.info(e)
 
 if __name__ == "__main__":
     main()

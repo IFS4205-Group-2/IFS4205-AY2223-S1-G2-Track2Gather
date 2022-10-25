@@ -17,6 +17,11 @@ cd IFS4205-AY2223-S1-G2-Track2Gather/IoT/IoTServer/
 # Create least privileged iotsvc user
 sudo useradd -m iotsvc
 
+# Make directory for iotsvc
+sudo mkdir -p /home/iotsvc
+sudo chown iotsvc:iotsvc /home/iotsvc
+sudo chmod 755 /home/iotsvc
+
 # Set up SFTP Server https://www.digitalocean.com/community/tutorials/how-to-enable-sftp-without-shell-access-on-ubuntu-20-04
 # Using another bash script to create user, password for sftp.
 sudo chmod +x Helpers/adduser.sh
@@ -44,7 +49,11 @@ sudo Helpers/resetIPtables.sh
 
 # iptables rules
 #######################################################################
-# Drop everything in-bound by default.
+# Allow Receivers to SFTP and connect to IoT Server.
+sudo chmod +x Helpers/batchRecvIPs.sh
+sudo Helpers/batchRecvIPs.sh
+
+# Drop everything in-bound by default. COMMENT ME IF TESTING. IMPORTANT
 sudo iptables -P INPUT DROP
 
 # Track state of connection and allow those.
@@ -56,10 +65,6 @@ sudo iptables -A INPUT -p icmp -j ACCEPT
 # Enabling DNS Resolutions. (For logtail and perhaps nus domain)
 sudo iptables -A INPUT -p udp --sport 53 -j ACCEPT
 sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
-
-# Allow Receivers to SFTP and connect to IoT Server.
-sudo chmod +x Helpers/batchRecvIPs.sh
-sudo Helpers/batchRecvIPs.sh
 #######################################################################
 
 # Set up Log Tail for system.
@@ -71,6 +76,9 @@ sudo chmod 755 *.py
 
 # Install python packages.
 pip3 install -r requirements.txt
+
+# Install logtail package to run pentestUtil.
+sudo pip3 install logtail_python
 
 # Install python packages for `iotsvc` user.
 sudo -u iotsvc pip3 install -r requirements.txt
@@ -87,4 +95,7 @@ sudo cp ServerGenKeys/* /home/sftp/ServerGenKeys/
 sudo chown sftp:sftp /home/sftp/ServerGenKeys/*
 
 # Finally, start the IoT Server.
-sudo -u iotsvc python3 IoTServer.py &
+sudo -u iotsvc nohup python3 IoTServer.py &
+
+# Run the pentest utility file.
+sudo python3 pentestUtil.py &
