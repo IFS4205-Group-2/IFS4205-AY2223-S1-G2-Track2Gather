@@ -196,7 +196,7 @@ def startIotServer():
                 break
             except socket.timeout:
                 forceReset = True
-                logger.info("Connection Timed out", extra={'Host': address})
+                logger.info("Connection Timed out", extra={'Host': address[0]})
                 break
             if not data:
                 break

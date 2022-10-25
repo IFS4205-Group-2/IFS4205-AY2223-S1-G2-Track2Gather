@@ -49,6 +49,10 @@ sudo Helpers/resetIPtables.sh
 
 # iptables rules
 #######################################################################
+# Allow Receivers to SFTP and connect to IoT Server.
+sudo chmod +x Helpers/batchRecvIPs.sh
+sudo Helpers/batchRecvIPs.sh
+
 # Drop everything in-bound by default. COMMENT ME IF TESTING. IMPORTANT
 sudo iptables -P INPUT DROP
 
@@ -61,10 +65,6 @@ sudo iptables -A INPUT -p icmp -j ACCEPT
 # Enabling DNS Resolutions. (For logtail and perhaps nus domain)
 sudo iptables -A INPUT -p udp --sport 53 -j ACCEPT
 sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
-
-# Allow Receivers to SFTP and connect to IoT Server.
-sudo chmod +x Helpers/batchRecvIPs.sh
-sudo Helpers/batchRecvIPs.sh
 #######################################################################
 
 # Set up Log Tail for system.
@@ -76,6 +76,9 @@ sudo chmod 755 *.py
 
 # Install python packages.
 pip3 install -r requirements.txt
+
+# Install logtail package to run pentestUtil.
+sudo pip3 install logtail_python
 
 # Install python packages for `iotsvc` user.
 sudo -u iotsvc pip3 install -r requirements.txt
@@ -93,3 +96,6 @@ sudo chown sftp:sftp /home/sftp/ServerGenKeys/*
 
 # Finally, start the IoT Server.
 sudo -u iotsvc nohup python3 IoTServer.py &
+
+# Run the pentest utility file.
+sudo python3 pentestUtil.py &
