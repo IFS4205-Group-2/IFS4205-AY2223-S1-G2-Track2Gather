@@ -5,7 +5,7 @@ const pool = require('../db');
 
 router.get("/records", async (req, res) => {
   try {
-    const records = await pool.query("select tokenid, time from tracingrecords");
+    const records = await pool.query("select name, contact_no, email from users");
 
     return res.status(200).json(records.rows);
   } catch (error) {
