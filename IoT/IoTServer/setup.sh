@@ -49,7 +49,7 @@ sudo Helpers/resetIPtables.sh
 
 # iptables rules
 #######################################################################
-# Drop everything in-bound by default.
+# Drop everything in-bound by default. COMMENT ME IF TESTING. IMPORTANT
 sudo iptables -P INPUT DROP
 
 # Track state of connection and allow those.
@@ -92,4 +92,4 @@ sudo cp ServerGenKeys/* /home/sftp/ServerGenKeys/
 sudo chown sftp:sftp /home/sftp/ServerGenKeys/*
 
 # Finally, start the IoT Server.
-sudo -u iotsvc python3 IoTServer.py &
+sudo -u iotsvc nohup python3 IoTServer.py &
