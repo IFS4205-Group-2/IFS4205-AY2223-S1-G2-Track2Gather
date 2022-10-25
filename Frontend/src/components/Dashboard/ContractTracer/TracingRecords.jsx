@@ -37,15 +37,16 @@ const FetchedData = [
     time: "2021/01/14 09:15 AM",
   },
 ];
-
 export default function TracingRecords() {
   const { data: records, isSuccess } = useQuery(["records"], async () => {
     const res = await fetch("http://localhost:4000/tracing/records");
     const data = await res.json();
     return data;
   });
-
   const [data, setData] = useState([]);
+
+  // const [data, setData] = useState(FetchedData);
+
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -64,6 +65,8 @@ export default function TracingRecords() {
   const getSortedData = (sortBy, val) => {
     if (!isSuccess) return [];
     const dataToSort = records.slice().sort((a, b) => {
+      // let dataToSort = data;
+      // dataToSort.sort((a, b) => {
       let aVal = a[sortBy];
       let bVal = b[sortBy];
       switch (typeof aVal) {
@@ -83,9 +86,9 @@ export default function TracingRecords() {
     if (!isSuccess) return [];
     let filterFunc = (item) => {
       if (
-        item.inf1.indexOf(e) >= 0 ||
-        item.inf2.indexOf(e) >= 0 ||
-        item.inf3.indexOf(e) >= 0
+        item.infectant1.indexOf(e) >= 0 ||
+        item.infectant2.indexOf(e) >= 0 ||
+        item.time.indexOf(e) >= 0
       )
         return true;
     };
@@ -156,9 +159,9 @@ export default function TracingRecords() {
           <Tbody>
             {data.map((item, i) => (
               <Tr key={i.toString()}>
-                <Td>{item.inf1}</Td>
-                <Td>{item.inf2}</Td>
-                <Td>{item.inf3}</Td>
+                <Td>{item.closecontactuid}</Td>
+                <Td>{item.uid}</Td>
+                <Td>{item.time}</Td>
               </Tr>
             ))}
           </Tbody>
