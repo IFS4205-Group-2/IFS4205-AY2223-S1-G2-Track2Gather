@@ -60,21 +60,21 @@ export default function CloseContactInformation() {
     if (!isSuccess) return [];
     let filterFunc = (item) => {
       if (
-        item.name.indexOf(e) >= 0 ||
-        item.email.indexOf(e) >= 0 ||
-        item.contact_no.toString().indexOf(e) >= 0 ||
-        item.gender.indexOf(e) >= 0 ||
-        item.zipcode.toString().indexOf(e) >= 0 ||
-        item?.tid?.toString().indexOf(e) >= 0 
+        item.name.indexOf(e) >=0 ||
+        item.email.indexOf(e) >=0 ||
+        item.contact_no.toString().indexOf(e) >=0 ||
+        item.gender.indexOf(e) >=0 ||
+        item.zipcode.toString().indexOf(e) >=0 ||
+        item?.tid?.toString().indexOf(e) >=0 
       )
         return true;
-     else return false;
+      else return false;
     };
 
     let dataForState = data.filter((item) => filterFunc(item));
     setData(dataForState);
   };
-  
+
 
   return (
     <>
