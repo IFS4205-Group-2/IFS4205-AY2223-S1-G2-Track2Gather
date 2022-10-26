@@ -7,6 +7,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 
@@ -16,10 +17,8 @@ export default function TracingRecords() {
     const data = await res.json();
     return data;
   });
-  console.log(records);
+  
   const [data, setData] = useState([]);
-
- 
 
   const [count, setCount] = useState(0);
 
@@ -32,9 +31,9 @@ export default function TracingRecords() {
   }, [isSuccess, records]);
 
   // codes for sort direction
-  const [inf1, setInf1] = useState(0);
-  const [inf2, setInf2] = useState(0);
-  const [inf3, setInf3] = useState(0);
+  const [name, setInf1] = useState(0);
+  const [email, setInf2] = useState(0);
+  const [contact_no, setInf3] = useState(0);
 
   const getSortedData = (sortBy, val) => {
     if (!isSuccess) return [];
@@ -60,9 +59,9 @@ export default function TracingRecords() {
     if (!isSuccess) return [];
     let filterFunc = (item) => {
       if (
-        item.inf1.indexOf(e) >= 0 ||
-        item.inf2.indexOf(e) >= 0 ||
-        item.inf3.indexOf(e) >= 0
+        item.name.indexOf(e) >= 0 ||
+        item.email.indexOf(e) >= 0 ||
+        item.contact_no.indexOf(e) >= 0
       )
         return true;
     };
@@ -103,8 +102,8 @@ export default function TracingRecords() {
             <Tr>
               <Th
                 onClick={() => {
-                  getSortedData("inf1", inf1);
-                  setInf1(!inf1);
+                  getSortedData("name", name);
+                  setInf1(!name);
                 }}
                 style={{ cursor: "pointer" }}
               >
@@ -112,8 +111,8 @@ export default function TracingRecords() {
               </Th>
               <Th
                 onClick={() => {
-                  getSortedData("inf2", inf2);
-                  setInf2(!inf2);
+                  getSortedData("email", email);
+                  setInf2(!email);
                 }}
                 style={{ cursor: "pointer" }}
               >
@@ -121,8 +120,8 @@ export default function TracingRecords() {
               </Th>
               <Th
                 onClick={() => {
-                  getSortedData("inf3", inf3);
-                  setInf3(!inf3);
+                  getSortedData("contact_no", contact_no);
+                  setInf3(!contact_no);
                 }}
                 style={{ cursor: "pointer" }}
               >
@@ -133,9 +132,9 @@ export default function TracingRecords() {
           <Tbody>
             {data.map((item, i) => (
               <Tr key={i.toString()}>
-                <Td>{item.inf1}</Td>
-                <Td>{item.inf2}</Td>
-                <Td>{item.inf3}</Td>
+                <Td>{item.name}</Td>
+                <Td>{item.email}</Td>
+                <Td>{item.contact_no}</Td>
               </Tr>
             ))}
           </Tbody>
