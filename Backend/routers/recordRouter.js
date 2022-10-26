@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db');
+const pooldb2 = require('../db2');
 
 router.get("/contacts", async (req, res) => {
   try {
@@ -17,7 +18,7 @@ router.get("/contacts", async (req, res) => {
 router.get("/records", async (req, res) => {
   try {
     
-    const records = await pool.query("SELECT name, email, contact_no FROM users;");
+    const records = await pooldb2.query("SELECT tokenID, time, location FROM TracingRecords;");
     console.log("records request received");
     return res.status(200).json(records.rows);
   } catch (error) {
