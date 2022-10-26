@@ -64,8 +64,9 @@ export default function CloseContactInformation() {
         item.email.indexOf(e) >=0 ||
         item.contact_no.toString().indexOf(e) >=0 ||
         item.gender.indexOf(e) >=0 ||
-        item.zipcode.toString().indexOf(e) >=0 ||
-        item?.tid?.toString().indexOf(e) >=0 
+        item?.tid?.toString().indexOf(e) >=0  ||
+        item.zipcode.toString().indexOf(e) >=0 
+        
       )
         return true;
       else return false;
