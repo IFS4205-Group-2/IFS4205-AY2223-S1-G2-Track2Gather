@@ -18,7 +18,7 @@ jobs:
 
       - name: Install python3 packages.
         working-directory: IoT/
-        run: pip install -r IoTServer/requirements.txt
+        run: pip install -r test/requirements.txt
 
       - name: Install bluez to enable bluetoothctl.
         run: |
@@ -28,7 +28,7 @@ jobs:
         working-directory: IoT/
         run : |
           sudo cp GMS/gmsservice.py /opt/hostedtoolcache/Python/3.9.15/x64/lib/python3.9/site-packages/adafruit_ble/services/
-
+          
       - name: Run unit tests.
         working-directory: IoT/test/
         run: python -m unittest discover -s . -p "IoT*Tests.py"

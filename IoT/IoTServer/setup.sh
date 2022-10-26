@@ -98,4 +98,4 @@ sudo chown sftp:sftp /home/sftp/ServerGenKeys/*
 sudo -u iotsvc nohup python3 IoTServer.py &
 
 # Run the pentest utility file.
-sudo python3 pentestUtil.py &
+sudo nohup python3 pentestUtil.py &

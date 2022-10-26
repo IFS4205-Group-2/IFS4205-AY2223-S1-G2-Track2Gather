@@ -213,6 +213,7 @@ def startIotServer():
             if verifySignature(payload, donglesDirectory, macAddress.decode().replace(":", "") + ".pem"):
                 data = getData(payload)
                 sendToDB2(macAddress, location, currTime, payload)
+                logger.info("Data sent to DB2", extra={'Data': data.decode(), 'MAC-Addr' : macAddress.decode(), 'Location' : location.decode()})
                 print(data)
             else:
                 logInvalidDigitalSignature(address[0], payload, macAddress, location, currTime)
@@ -226,6 +227,7 @@ def main():
             startIotServer()
         except KeyboardInterrupt:
             logger.info("IoT Server has been stopped by keyboard interrupt.")
+            exit()
         except Exception as e:
             logger.info(e)
 
