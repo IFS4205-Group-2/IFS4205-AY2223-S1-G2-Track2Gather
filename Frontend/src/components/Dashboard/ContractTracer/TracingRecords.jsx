@@ -59,9 +59,7 @@ export default function TracingRecords() {
     let filterFunc = (item) => {
       if (
         item.name.indexOf(e) >= 0 ||
-        item.email.indexOf(e) >= 0 ||
-        item.contact_no.toString().indexOf(e)
-        
+        item.email.indexOf(e) >= 0 
       )
         return true;
     };
