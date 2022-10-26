@@ -53,15 +53,20 @@ export default function TracingRecords() {
     setCount(count + 1);
     setData(dataToSort);
   };
-  const filterTable = (target) => {
-    const filteredData = data.filter(row => row.name.toLocaleLowerCase().includes(target.toLocaleLowerCase())
-      || row.email.toLocaleLowerCase().includes(target.toLocaleLowerCase())
-      || row.contact_no.toString().toLocaleLowerCase().includes(target.toLocaleLowerCase()));
-    if (filterTable.length === 0 || target === '') {
-      setData(data);
-      return;
-    }
-    setData(filteredData);
+
+  const filterTable = (e) => {
+    if (!isSuccess) return [];
+    let filterFunc = (item) => {
+      if (
+        item.name.indexOf(e) >= 0 ||
+        item.email.indexOf(e) >= 0 ||
+        item.contact_no.toString().indexOf(e) >=0
+        )
+        return true;
+    };
+
+    let dataForState = records.filter((item) => filterFunc(item));
+    setData(dataForState);
   };
 
   console.log(data);
