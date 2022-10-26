@@ -62,16 +62,16 @@ export default function CloseContactInformation() {
       if (
         item.name.indexOf(e) >= 0 ||
         item.email.indexOf(e) >= 0 ||
-        item.contact_no.indexOf(e) >= 0 ||
+        item.contact_no.toString().indexOf(e) >= 0 ||
         item.gender.indexOf(e) >= 0 ||
-        item.zipcode.indexOf(e) >= 0 ||
-        item.tid.indexOf(e) >= 0 
+        item.zipcode.toString().indexOf(e) >= 0 ||
+        item.tid.toString().indexOf(e) >= 0 
       )
         return true;
      else return false;
     };
 
-    let dataForState = contacts.filter((item) => filterFunc(item));
+    let dataForState = data.filter((item) => filterFunc(item));
     setData(dataForState);
   };
   
@@ -89,7 +89,7 @@ export default function CloseContactInformation() {
         <input
           type="text"
           onChange={(e) => filterTable(e.target.value)}
-          placeholder="Search for Infectants and Time..."
+          placeholder="Search"
           style={{
             background: "rgba(0,0,0,0.2)",
             borderRadius: 5,
