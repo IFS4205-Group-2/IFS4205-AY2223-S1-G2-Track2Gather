@@ -16,6 +16,7 @@ export default function TracingRecords() {
     const data = await res.json();
     return data;
   });
+  console.log(records);
   const [data, setData] = useState([]);
 
  
