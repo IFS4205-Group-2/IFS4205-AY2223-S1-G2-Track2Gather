@@ -65,10 +65,9 @@ export default function TracingRecords() {
         return true;
     };
 
-    let dataForState = records.filter((item) => filterFunc(item));
+    let dataForState = data.filter((item) => filterFunc(item));
     setData(dataForState);
   };
-  console.log(data);
 
   
   return (
