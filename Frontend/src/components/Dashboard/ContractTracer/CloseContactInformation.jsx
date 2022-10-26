@@ -5,62 +5,49 @@ import {
   Td,
   Th,
   Thead,
-  Tr
+  Tr,
 } from "@chakra-ui/react";
 
-import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
 
-const FetchedData = [
-  {
-    infectant: "Alice",
-    contactNumber: "92030886"
-  },
-  {
-    infectant: "David",
-    contactNumber: "91114265"
-  },
-  {
-    infectant: "Claira",
-    contactNumber: "81231454"
-  },
-  {
-    infectant: "Sandy",
-    contactNumber: "90329412"
-  },
-  {
-    infectant: "Emily",
-    contactNumber: "87241234"
-  },
-];
 export default function CloseContactInformation() {
-  const { data: records, isSuccess } = useQuery(["records"], async () => {
-    const res = await fetch("http://localhost:4000/tracing/records");
+  const { data: contacts, isSuccess } = useQuery(["contacts"], async () => {
+    const res = await fetch("http://172.25.76.159:4000/tracing/contacts");
     const data = await res.json();
     return data;
   });
+ 
+  const [data, setData] = useState([]);
+
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (isSuccess) {
-      setData(records);
+      setData(contacts);
     }
-
     return () => {};
-  }, [isSuccess, records]);
+  }, [isSuccess, contacts]);
 
-  const [data, setData] = useState([]);
-  const [count, setCount] = useState(0);
+  // codes for sort direction
+  const [name, setInf1] = useState(0);
+  const [email, setInf2] = useState(0);
+  const [contact_no, setInf3] = useState(0);
+  const [gender, setInf4] = useState(0);
+  const [zipcode, setInf5] = useState(0);
+  const [tid, setInf6] = useState(0);
+ 
 
-  const getSortedData = (sortBy) => {
-    let dataToSort = data;
-    dataToSort.sort((a, b) => {
+  const getSortedData = (sortBy, val) => {
+    if (!isSuccess) return [];
+    const dataToSort = contacts.slice().sort((a, b) => {
       let aVal = a[sortBy];
       let bVal = b[sortBy];
       switch (typeof aVal) {
         case "string":
-          return aVal.localeCompare(bVal);
+          return val ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
         case "number":
-          return aVal - bVal;
+          return val ? aVal - bVal : bVal - aVal;
         default:
           throw new Error("Unsupported value to sort by");
       }
@@ -69,32 +56,120 @@ export default function CloseContactInformation() {
     setData(dataToSort);
   };
 
+  const filterTable = (e) => {
+    if (!isSuccess) return [];
+    let filterFunc = (item) => {
+      if (
+        item.inf1.indexOf(e) >= 0 ||
+        item.inf2.indexOf(e) >= 0 ||
+        item.inf3.indexOf(e) >= 0 ||
+        item.inf4.indexOf(e) >= 0 ||
+        item.inf5.indexOf(e) >= 0 ||
+        item.inf6.indexOf(e) >= 0 
+      )
+        return true;
+     else return false;
+    };
+
+    let dataForState = contacts.filter((item) => filterFunc(item));
+    setData(dataForState);
+  };
+  
 
   return (
     <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: 20,
+        }}
+      >
+        <p>Search for:</p>
+        <input
+          type="text"
+          onChange={(e) => filterTable(e.target.value)}
+          placeholder="Search for Infectants and Time..."
+          style={{
+            background: "rgba(0,0,0,0.2)",
+            borderRadius: 5,
+            marginLeft: 20,
+            paddingLeft: 10,
+            paddingRight: 10,
+            width: 350,
+            height: 30,
+          }}
+        />
+      </div>
       <TableContainer>
         <Table variant="simple" colorScheme={"facebook"}>
           <Thead>
             <Tr>
               <Th
-                onClick={() => getSortedData("infectant")}
+                onClick={() => {
+                  getSortedData("name", name);
+                  setInf1(!name);
+                }}
                 style={{ cursor: "pointer" }}
               >
-                Infectant 
+                Name
               </Th>
               <Th
-                onClick={() => getSortedData("contactNumber")}
+                onClick={() => {
+                  getSortedData("email", email);
+                  setInf2(!email);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                Email
+              </Th>
+              <Th
+                onClick={() => {
+                  getSortedData("contact_no", contact_no);
+                  setInf3(!contact_no);
+                }}
                 style={{ cursor: "pointer" }}
               >
                 Contact Number
+              </Th>
+              <Th
+                onClick={() => {
+                  getSortedData("gender", gender);
+                  setInf4(!gender);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                Gender
+              </Th>
+              <Th
+                onClick={() => {
+                  getSortedData("zipcode", zipcode);
+                  setInf5(!zipcode);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                Zip Code
+              </Th>
+              <Th
+                onClick={() => {
+                  getSortedData("tid", tid);
+                  setInf6(!tid);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                Token ID
               </Th>
             </Tr>
           </Thead>
           <Tbody>
             {data.map((item, i) => (
               <Tr key={i.toString()}>
-                <Td>{item.infectant}</Td>
-                <Td>{item.contactNumber}</Td>
+                <Td>{item.name}</Td>
+                <Td>{item.email}</Td>
+                <Td>{item.contact_no}</Td>
+                <Td>{item.gender}</Td>
+                <Td>{item.zipcode}</Td>
+                <Td>{item.tid}</Td>
               </Tr>
             ))}
           </Tbody>

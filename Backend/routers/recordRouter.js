@@ -15,4 +15,16 @@ router.get("/records", async (req, res) => {
   }
 });
 
+router.get("/contact", async (req, res) => {
+  try {
+    
+    const contact = await pool.query("SELECT name, contact_no, email, gender, zipcode, tid FROM users;");
+    console.log("records request received");
+    return res.status(200).json(contact.rows);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: 'Internal Server error' });
+  }
+});
+
 module.exports = router;
