@@ -56,7 +56,7 @@ export default function TracingRecords() {
   const filterTable = (target) => {
     const filteredData = data.filter(row => row.name.toLocaleLowerCase().includes(target.toLocaleLowerCase())
       || row.email.toLocaleLowerCase().includes(target.toLocaleLowerCase())
-      || row.contact_no.toLocaleLowerCase().includes(target.toLocaleLowerCase()));
+      || row.contact_no.toString().toLocaleLowerCase().includes(target.toLocaleLowerCase()));
     if (filterTable.length === 0 || target === '') {
       setData(data);
       return;
