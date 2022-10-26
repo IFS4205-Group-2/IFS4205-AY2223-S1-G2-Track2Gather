@@ -227,6 +227,7 @@ def main():
             startIotServer()
         except KeyboardInterrupt:
             logger.info("IoT Server has been stopped by keyboard interrupt.")
+            exit()
         except Exception as e:
             logger.info(e)
 
