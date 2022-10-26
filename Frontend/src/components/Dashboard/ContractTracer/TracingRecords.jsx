@@ -60,7 +60,8 @@ export default function TracingRecords() {
       if (
         item.name.indexOf(e) >= 0 ||
         item.email.indexOf(e) >= 0 ||
-        item.contact_no.indexOf(e) >= 0
+        item.contact_no.toString().indexOf(e)
+        
       )
         return true;
     };
