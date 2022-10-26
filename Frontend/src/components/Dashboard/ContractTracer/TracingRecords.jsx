@@ -39,7 +39,7 @@ const FetchedData = [
 ];
 export default function TracingRecords() {
   const { data: records, isSuccess } = useQuery(["records"], async () => {
-    const res = await fetch("http://localhost:4000/tracing/records");
+    const res = await fetch("http://172.25.76.159:4000/tracing/records");
     const data = await res.json();
     return data;
   });
