@@ -6,7 +6,7 @@ const pool = require('../db');
 router.get("/records", async (req, res) => {
   try {
     
-    const records = await pool.query("SELECT * FROM users;");
+    const records = await pool.query("SELECT name, email, contact_no FROM users;");
     console.log("records request received");
     return res.status(200).json(records.rows);
   } catch (error) {

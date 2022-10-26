@@ -93,7 +93,7 @@ export default function TracingRecords() {
         return true;
     };
 
-    let dataForState = FetchedData.filter((item) => filterFunc(item));
+    let dataForState = records.filter((item) => filterFunc(item));
     setData(dataForState);
   };
 
