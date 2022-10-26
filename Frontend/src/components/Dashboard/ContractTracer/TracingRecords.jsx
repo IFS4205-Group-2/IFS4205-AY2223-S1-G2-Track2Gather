@@ -10,33 +10,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 
-const FetchedData = [
-  {
-    infectant1: "Alice",
-    infectant2: " Bernard",
-    time: "2020/12/11 09:12 AM",
-  },
-  {
-    infectant1: "David",
-    infectant2: "Claria",
-    time: "2022/05/16 02:15 AM",
-  },
-  {
-    infectant1: "Claria",
-    infectant2: "David",
-    time: "2021/07/13 09:12 PM",
-  },
-  {
-    infectant1: "Claria",
-    infectant2: "Emily",
-    time: "2020/03/18 04:42 AM",
-  },
-  {
-    infectant1: "Sandy",
-    infectant2: "Bernard",
-    time: "2021/01/14 09:15 AM",
-  },
-];
 export default function TracingRecords() {
   const { data: records, isSuccess } = useQuery(["records"], async () => {
     const res = await fetch("http://172.25.76.159:4000/tracing/records");
@@ -45,7 +18,7 @@ export default function TracingRecords() {
   });
   const [data, setData] = useState([]);
 
-  // const [data, setData] = useState(FetchedData);
+ 
 
   const [count, setCount] = useState(0);
 
@@ -129,7 +102,7 @@ export default function TracingRecords() {
             <Tr>
               <Th
                 onClick={() => {
-                  getSortedData("infectant1", inf1);
+                  getSortedData("inf1", inf1);
                   setInf1(!inf1);
                 }}
                 style={{ cursor: "pointer" }}
@@ -138,7 +111,7 @@ export default function TracingRecords() {
               </Th>
               <Th
                 onClick={() => {
-                  getSortedData("infectant2", inf2);
+                  getSortedData("inf2", inf2);
                   setInf2(!inf2);
                 }}
                 style={{ cursor: "pointer" }}
@@ -147,7 +120,7 @@ export default function TracingRecords() {
               </Th>
               <Th
                 onClick={() => {
-                  getSortedData("time", inf3);
+                  getSortedData("inf3", inf3);
                   setInf3(!inf3);
                 }}
                 style={{ cursor: "pointer" }}
