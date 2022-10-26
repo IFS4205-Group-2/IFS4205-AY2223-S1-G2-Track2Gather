@@ -60,12 +60,12 @@ export default function CloseContactInformation() {
     if (!isSuccess) return [];
     let filterFunc = (item) => {
       if (
-        item.inf1.indexOf(e) >= 0 ||
-        item.inf2.indexOf(e) >= 0 ||
-        item.inf3.indexOf(e) >= 0 ||
-        item.inf4.indexOf(e) >= 0 ||
-        item.inf5.indexOf(e) >= 0 ||
-        item.inf6.indexOf(e) >= 0 
+        item.name.indexOf(e) >= 0 ||
+        item.email.indexOf(e) >= 0 ||
+        item.contact_no.indexOf(e) >= 0 ||
+        item.gender.indexOf(e) >= 0 ||
+        item.zipcode.indexOf(e) >= 0 ||
+        item.tid.indexOf(e) >= 0 
       )
         return true;
      else return false;
