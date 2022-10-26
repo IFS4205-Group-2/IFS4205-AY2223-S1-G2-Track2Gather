@@ -17,7 +17,7 @@ export default function TracingRecords() {
     const data = await res.json();
     return data;
   });
-  console.log(data);
+ 
   const [data, setData] = useState([]);
 
   const [count, setCount] = useState(0);
@@ -68,6 +68,7 @@ export default function TracingRecords() {
     let dataForState = records.filter((item) => filterFunc(item));
     setData(dataForState);
   };
+  console.log(data);
 
   
   return (
