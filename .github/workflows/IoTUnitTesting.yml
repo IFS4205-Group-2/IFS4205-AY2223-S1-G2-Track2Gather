@@ -24,6 +24,11 @@ jobs:
         run: |
           sudo apt-get install bluez
 
+      - name: Manually copy one of adafruit bug, python file.
+        working-directory: IoT/
+        run : |
+          sudo cp GMS/gmsservice.py /opt/hostedtoolcache/Python/3.9.15/x64/lib/python3.9/site-packages/adafruit_ble/services/
+          
       - name: Run unit tests.
         working-directory: IoT/test/
         run: python -m unittest discover -s . -p "IoT*Tests.py"
