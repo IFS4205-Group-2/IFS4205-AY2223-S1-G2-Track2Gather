@@ -55,7 +55,19 @@ export default function CloseContactInformation() {
     setCount(count + 1);
     setData(dataToSort);
   };
-
+  const filterData = (target) => {
+    const filteredData = data.filter(row => row.name.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.email.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.contact_no.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.gender.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.tid.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.zipcode.toLocaleLowerCase().includes(target.toLocaleLowerCase()));
+    if (filteredData.length === 0 || target === '') {
+      setData(data);
+      return;
+    }
+    setData(filteredData);
+  };
   const filterTable = (e) => {
     if (!isSuccess) return [];
     let filterFunc = (item) => {
@@ -87,7 +99,7 @@ export default function CloseContactInformation() {
         <p>Search for:</p>
         <input
           type="text"
-          onChange={(e) => filterTable(e.target.value)}
+          onChange={(e) => filterData(e.target.value)}
           placeholder="Search"
           style={{
             background: "rgba(0,0,0,0.2)",
