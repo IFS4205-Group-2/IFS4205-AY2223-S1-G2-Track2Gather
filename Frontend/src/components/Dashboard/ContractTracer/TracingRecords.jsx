@@ -30,9 +30,13 @@ export default function TracingRecords() {
   }, [isSuccess, records]);
 
   // codes for sort direction
-  const [tokenid, setInf1] = useState(0);
-  const [time, setInf2] = useState(0);
-  const [location, setInf3] = useState(0);
+  const [tokenid1, setInf1] = useState(0);
+  const [time1, setInf2] = useState(0);
+  const [location1, setInf3] = useState(0);
+  const [tokenid2, setInf4] = useState(0);
+  const [time2, setInf5] = useState(0);
+  const [location2, setInf6] = useState(0);
+
 
   const getSortedData = (sortBy, val) => {
     if (!isSuccess) return [];
@@ -56,9 +60,12 @@ export default function TracingRecords() {
     if (!isSuccess) return [];
     let filterFunc = (item) => {
       if (
-        item.tokenid.indexOf(e) >= 0 ||
-        item.time.indexOf(e) >= 0 ||
-        item.location.toString().indexOf(e) >=0
+        item.tokenid1.toString().indexOf(e) >= 0 ||
+        item.time1.indexOf(e) >= 0 ||
+        item.location1.indexOf(e) >=0 ||
+        item.tokenid2.toString().indexOf(e) >= 0 ||
+        item.time2.indexOf(e) >= 0 ||
+        item.location2.indexOf(e) >=0
         )
         return true;
     };
@@ -100,8 +107,8 @@ export default function TracingRecords() {
             <Tr>
               <Th
                 onClick={() => {
-                  getSortedData("tokenid", tokenid);
-                  setInf1(!tokenid);
+                  getSortedData("tokenid1", tokenid1);
+                  setInf1(!tokenid1);
                 }}
                 style={{ cursor: "pointer" }}
               >
@@ -109,8 +116,8 @@ export default function TracingRecords() {
               </Th>
               <Th
                 onClick={() => {
-                  getSortedData("time", time);
-                  setInf2(!time);
+                  getSortedData("time1", time1);
+                  setInf2(!time1);
                 }}
                 style={{ cursor: "pointer" }}
               >
@@ -118,21 +125,51 @@ export default function TracingRecords() {
               </Th>
               <Th
                 onClick={() => {
-                  getSortedData("location", location);
-                  setInf3(!location);
+                  getSortedData("location1", location1);
+                  setInf3(!location1);
                 }}
                 style={{ cursor: "pointer" }}
               >
                 Location
+              </Th>
+              <Th
+                onClick={() => {
+                  getSortedData("tokenid2", tokenid2);
+                  setInf4(!tokenid2);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                Token ID 2
+              </Th>
+              <Th
+                onClick={() => {
+                  getSortedData("time2", time2);
+                  setInf5(!time2);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                Time 2
+              </Th>
+              <Th
+                onClick={() => {
+                  getSortedData("location2", location2);
+                  setInf6(!location2);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                Location 2
               </Th>
             </Tr>
           </Thead>
           <Tbody>
             {data.map((item, i) => (
               <Tr key={i.toString()}>
-                <Td>{item.tokenid}</Td>
-                <Td>{item.time}</Td>
-                <Td>{item.location}</Td>
+                <Td>{item.tokenid1}</Td>
+                <Td>{item.time1}</Td>
+                <Td>{item.location1}</Td>
+                <Td>{item.tokenid2}</Td>
+                <Td>{item.time2}</Td>
+                <Td>{item.location2}</Td>
               </Tr>
             ))}
           </Tbody>
