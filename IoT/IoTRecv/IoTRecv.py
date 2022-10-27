@@ -24,7 +24,7 @@ logger.addHandler(handler)
 LPORT = 1337
 LHOST = config.ip
 
-LOCATION = b"SR19"
+LOCATION = config.location
 TOKEN = b"<TRACK2GATHER>"
 
 KEY_BYTES = 16

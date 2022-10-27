@@ -3,3 +3,4 @@
 source_token="TEST"
 
 ip="127.0.0.1"
+location=b"SR19"
