@@ -35,7 +35,7 @@ export default function TracingRecords() {
   const [location1, setInf3] = useState(0);
   const [tokenid2, setInf4] = useState(0);
   const [time2, setInf5] = useState(0);
-  const [diff, setInf6] = useState(0);
+ 
 
 
   const getSortedData = (sortBy, val) => {
@@ -64,8 +64,8 @@ export default function TracingRecords() {
         item.time1.indexOf(e) >= 0 ||
         item.location1.indexOf(e) >=0 ||
         item.tokenid2.toString().indexOf(e) >= 0 ||
-        item.time2.indexOf(e) >= 0 ||
-        item.i.indexOf(e) >=0
+        item.time2.indexOf(e) >= 0 
+        
         )
         return true;
     };
@@ -150,15 +150,6 @@ export default function TracingRecords() {
               >
                 Time 2
               </Th>
-              <Th
-                onClick={() => {
-                  getSortedData("diff", diff);
-                  setInf6(!diff);
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                Location 2
-              </Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -169,7 +160,7 @@ export default function TracingRecords() {
                 <Td>{item.location1}</Td>
                 <Td>{item.tokenid2}</Td>
                 <Td>{item.time2}</Td>
-                <Td>{item.diff}</Td>
+                
               </Tr>
             ))}
           </Tbody>
