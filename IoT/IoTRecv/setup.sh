@@ -2,6 +2,7 @@
 
 sudo apt install git -y
 sudo apt install python3-pip -y
+sudo apt install curl -y
 
 cd ~
 
@@ -16,8 +17,9 @@ sudo cp ../GMS/gmsservice.py ~/.local/lib/python3.8/site-packages/adafruit_ble/s
 pip3 install -r requirements.txt
 
 # Replace with IoT Server IP
-sudo iptables -A INPUT -s 192.168.1.109 -j ACCEPT
-sudo iptables -A OUTPUT -d 192.168.1.109 -j ACCEPT
+sudo iptables -F
+sudo iptables -A INPUT -s NUS_IP -j ACCEPT
+sudo iptables -A OUTPUT -d NUS_IP -j ACCEPT
 sudo iptables -P INPUT DROP
 sudo iptables -P OUTPUT DROP
 
