@@ -66,8 +66,7 @@ export default function CloseContactInformation() {
         item.gender.indexOf(e) >=0 ||
         item?.tid?.toString().indexOf(e) >=0  ||
         item.zipcode.toString().indexOf(e) >=0 
-        
-      )
+        )
         return true;
       else return false;
     };
