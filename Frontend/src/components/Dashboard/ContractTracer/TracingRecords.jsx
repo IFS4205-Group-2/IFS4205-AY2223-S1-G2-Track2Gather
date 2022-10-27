@@ -30,15 +30,13 @@ export default function TracingRecords() {
   }, [isSuccess, records]);
 
   // codes for sort direction
-  const [name, setInf1] = useState(0);
-  const [email, setInf2] = useState(0);
-  const [contact_no, setInf3] = useState(0);
+  const [tokenID, setInf1] = useState(0);
+  const [time, setInf2] = useState(0);
+  const [location, setInf3] = useState(0);
 
   const getSortedData = (sortBy, val) => {
     if (!isSuccess) return [];
     const dataToSort = records.slice().sort((a, b) => {
-      // let dataToSort = data;
-      // dataToSort.sort((a, b) => {
       let aVal = a[sortBy];
       let bVal = b[sortBy];
       switch (typeof aVal) {
@@ -58,9 +56,9 @@ export default function TracingRecords() {
     if (!isSuccess) return [];
     let filterFunc = (item) => {
       if (
-        item.name.indexOf(e) >= 0 ||
-        item.email.indexOf(e) >= 0 ||
-        item.contact_no.toString().indexOf(e) >=0
+        item.tokenID.indexOf(e) >= 0 ||
+        item.time.indexOf(e) >= 0 ||
+        item.location.toString().indexOf(e) >=0
         )
         return true;
     };
@@ -102,39 +100,39 @@ export default function TracingRecords() {
             <Tr>
               <Th
                 onClick={() => {
-                  getSortedData("name", name);
-                  setInf1(!name);
+                  getSortedData("tokenID", tokenID);
+                  setInf1(!tokenID);
                 }}
                 style={{ cursor: "pointer" }}
               >
-                Infectant 1
+                Token ID
               </Th>
               <Th
                 onClick={() => {
-                  getSortedData("email", email);
-                  setInf2(!email);
+                  getSortedData("time", time);
+                  setInf2(!time);
                 }}
                 style={{ cursor: "pointer" }}
               >
-                Infectant 2
+                Time 
               </Th>
               <Th
                 onClick={() => {
-                  getSortedData("contact_no", contact_no);
-                  setInf3(!contact_no);
+                  getSortedData("location", location);
+                  setInf3(!location);
                 }}
                 style={{ cursor: "pointer" }}
               >
-                Time of Close Contact
+                Location
               </Th>
             </Tr>
           </Thead>
           <Tbody>
             {data.map((item, i) => (
               <Tr key={i.toString()}>
-                <Td>{item.name}</Td>
-                <Td>{item.email}</Td>
-                <Td>{item.contact_no}</Td>
+                <Td>{item.tokenID}</Td>
+                <Td>{item.time}</Td>
+                <Td>{item.location}</Td>
               </Tr>
             ))}
           </Tbody>
