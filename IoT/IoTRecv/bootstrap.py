@@ -43,13 +43,13 @@ def printPrivateKeyAsIntArray(filename):
     
 
 # Replace with address of NUS net/local IoT Server VM.
-sftpServer = 'localhost'
+sftpServer = config.ip
 
 
 print("Retrieving Keys from Server...")
 with pysftp.Connection(sftpServer, username=config.sftp_user, password=config.sftp_password) as sftp:
     # To get files from server.
-    with sftp.cd('/Share'):           # Replace with Server Directory
+    with sftp.cd('/Server'):           # Replace with Server Directory
         sftp.get('serverPubKey.pem', f"{cwd}/ServerGenKeys/serverPubKey.pem")         # get a remote file
 print("Retrieved serverPubKey.pem")
 
@@ -82,6 +82,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "--all":
 
     if os.path.isfile(f"{cwd}/ServerGenKeys/defaultPrivateKey.pem"):
         os.remove(f"{cwd}/ServerGenKeys/defaultPrivateKey.pem")
+
 
 
 

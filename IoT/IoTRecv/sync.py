@@ -15,25 +15,24 @@ SIG_BYTES = 64
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 # Replace with address of NUS net/local IoT Server VM.
-sftpServer = '192.168.1.109'
+sftpServer = config.ip
 
 dongleDirectory = f"{cwd}/DongleKeys/"
 serverDirectory = f"{cwd}/ServerGenKeys/"
-testServerDirectory = f"{cwd}/../IoT Server/Receiver/"
 
 ble = BLERadio()
 
 GMS_connection = None
 
 # Hardcoded mac address
-found = {'E9:FC:CD:62:0A:49': False, 'F6:4F:42:E6:42:43': False}
+found = config.mac_dict
 
 '''
 Generates the directories for storing the public-private key pair.
 '''
 def generateDirectories():
     print("Generating Directories...")
-    for dir in [dongleDirectory, serverDirectory, testServerDirectory]:
+    for dir in [dongleDirectory, serverDirectory]:
         if not os.path.exists(f"{dir}"):
             os.makedirs(dir)
             print(f"{dir} has been created.")
@@ -82,8 +81,9 @@ def writeToPEM(publicKey, mac):
 
     with pysftp.Connection(sftpServer, username=config.sftp_user, password=config.sftp_password) as sftp:
         # To store/upload files to server.
-        with sftp.cd('/Receiver'):
+        with sftp.cd('/Dongles'):
             sftp.put(dongleDirectory + filename)
+            print("Sent to IoT Server")
 
 def connectToDongle(GMS_connection, mac, verifier):
     if GMS_connection and GMS_connection.connected:

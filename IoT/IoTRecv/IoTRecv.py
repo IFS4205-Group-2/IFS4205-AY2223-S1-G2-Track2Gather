@@ -1,6 +1,5 @@
-# Connect to a GMS echo service
-
 from http import server
+from logtail import LogtailHandler
 from adafruit_ble import BLERadio
 from adafruit_ble.advertising.standard import ProvideServicesAdvertisement
 from adafruit_ble.services.gmsservice import GMS
@@ -14,11 +13,18 @@ import time
 import logging
 import datetime
 import socket, os
+import config
+
+handler = LogtailHandler(source_token=config.source_token)
+logger = logging.getLogger(__name__)
+logger.handlers = []
+logger.setLevel(logging.INFO)
+logger.addHandler(handler)
 
 LPORT = 1337
-LHOST = "127.0.0.1"
+LHOST = config.ip
 
-LOCATION = b"SR19"
+LOCATION = config.location
 TOKEN = b"<TRACK2GATHER>"
 
 KEY_BYTES = 16
@@ -46,6 +52,54 @@ def setup(dir):
     recvPriKey = ECC.import_key(recvPriPem)
     signer = eddsa.new(recvPriKey, mode='rfc8032')
     return serverPubKey, signer
+
+def logDongleConnection(mac):
+    current_time = datetime.datetime.now().isoformat(timespec='seconds').replace('T', ' ')
+    logger.info(f"Connected to {mac}", extra={
+        'Time': current_time
+    })
+
+def logDongleDisconnection():
+    current_time = datetime.datetime.now().isoformat(timespec='seconds').replace('T', ' ')
+    logger.info(f"Disconnected", extra={
+        'Time': current_time
+    })
+    
+def logRecvStart():
+    current_time = datetime.datetime.now().isoformat(timespec='seconds').replace('T', ' ')
+    logger.info("IoT Receiver Started.", extra={
+        'Time': current_time
+    })
+    
+def logRecvListen():
+    current_time = datetime.datetime.now().isoformat(timespec='seconds').replace('T', ' ')
+    logger.info("IoT Receiver Listening...", extra={
+        'Time': current_time
+    })
+
+def logRecvStop():
+    current_time = datetime.datetime.now().isoformat(timespec='seconds').replace('T', ' ')
+    logger.info("IoT Receiver Stopped.", extra={
+        'Time': current_time
+    })
+
+def logDataError():
+    current_time = datetime.datetime.now().isoformat(timespec='seconds').replace('T', ' ')
+    logger.error("Error in sending Data from Dongle", extra={
+        'Time': current_time
+    })
+
+def logSignatureError():
+    current_time = datetime.datetime.now().isoformat(timespec='seconds').replace('T', ' ')
+    logger.error("Invalid Signature, could be due to corrupted data during transmission", extra={
+        'Time': current_time
+    })
+    
+def logBluetoothError():
+    current_time = datetime.datetime.now().isoformat(timespec='seconds').replace('T', ' ')
+    logger.error("Temporary Bluetooth Error", extra={
+        'Time': current_time
+    })
 
 """
 Generate Ephemeral Keys on the IoT Recv to perform key exchange
@@ -135,26 +189,22 @@ def sendPayload(payload):
 
 def connectToDongle(GMS_connection, mac, serverPubKey, signer):
     if GMS_connection and GMS_connection.connected:
-        print(mac)
+        logDongleConnection(mac)
         privKey, pubKey = generateEphemeralKeys()
         msg = writeReadToDongle(GMS_connection, pubKey, signer)
         iv, tag, ctPublicKey, ct = splitMsg(msg)
         symKey = generateSymKey(ctPublicKey, privKey)
         payload = constructPayload(ct, symKey, iv, tag, mac, serverPubKey, signer)
         sendPayload(payload)
-
-        # To verify on the receiver side
-        # plaintext = decryptAndVerification(symKey, iv, tag, ct, mac)
-        # print(plaintext)
     GMS_connection.disconnect()
+    logDongleDisconnection()
     
 
-# Structure: 16 (iv), 16 (tag), 40(public key), rest(ct): 64(signature), rest(pt)
-
 def main(GMS_connection, serverPubKey, signer):
+    logRecvStart()
     while True:
         if not GMS_connection:
-            print("Trying to connect...")
+            logRecvListen()
             try:
                 for adv in ble.start_scan(ProvideServicesAdvertisement, minimum_rssi=-95):
                     if GMS in adv.services:
@@ -162,18 +212,21 @@ def main(GMS_connection, serverPubKey, signer):
                         connectToDongle(GMS_connection, adv.address.string, serverPubKey, signer)
                 ble.stop_scan()
             except ValueError:
-                print("Invalid Signature")
-                if GMS_connection and GMS_connection.connected:
-                    GMS_connection.disconnect()
+                logSignatureError()
+            except AttributeError:
+                logDataError()
             except KeyboardInterrupt:
                 if GMS_connection and GMS_connection.connected:
                     GMS_connection.disconnect()
+                    logDongleDisconnection()
+                logRecvStop()
                 exit()
             except:
-                logging.exception(datetime.datetime.now().time())
+                logBluetoothError()
+            finally:
                 if GMS_connection and GMS_connection.connected:
                     GMS_connection.disconnect()
-            finally:
+                    logDongleDisconnection()
                 GMS_connection = None
                 ble.stop_scan()
 
