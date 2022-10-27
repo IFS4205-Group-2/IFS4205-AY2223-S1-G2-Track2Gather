@@ -30,7 +30,7 @@ export default function TracingRecords() {
   }, [isSuccess, records]);
 
   // codes for sort direction
-  const [tokenID, setInf1] = useState(0);
+  const [tokenid, setInf1] = useState(0);
   const [time, setInf2] = useState(0);
   const [location, setInf3] = useState(0);
 
@@ -56,7 +56,7 @@ export default function TracingRecords() {
     if (!isSuccess) return [];
     let filterFunc = (item) => {
       if (
-        item.tokenID.indexOf(e) >= 0 ||
+        item.tokenid.indexOf(e) >= 0 ||
         item.time.indexOf(e) >= 0 ||
         item.location.toString().indexOf(e) >=0
         )
@@ -100,8 +100,8 @@ export default function TracingRecords() {
             <Tr>
               <Th
                 onClick={() => {
-                  getSortedData("tokenID", tokenID);
-                  setInf1(!tokenID);
+                  getSortedData("tokenid", tokenid);
+                  setInf1(!tokenid);
                 }}
                 style={{ cursor: "pointer" }}
               >
@@ -130,7 +130,7 @@ export default function TracingRecords() {
           <Tbody>
             {data.map((item, i) => (
               <Tr key={i.toString()}>
-                <Td>{item.tokenID}</Td>
+                <Td>{item.tokenid}</Td>
                 <Td>{item.time}</Td>
                 <Td>{item.location}</Td>
               </Tr>
