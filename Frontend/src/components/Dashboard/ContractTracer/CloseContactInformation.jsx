@@ -68,7 +68,6 @@ export default function CloseContactInformation() {
         item.zipcode.toString().indexOf(e) >=0 
         )
         return true;
-      else return false;
     };
 
     let dataForState = data.filter((item) => filterFunc(item));
