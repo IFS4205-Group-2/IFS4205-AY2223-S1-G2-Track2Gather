@@ -12,11 +12,6 @@ const Login = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const csvReport = {
-    data: data,
-    headers: headers,
-    filename: 'Clue_Mediator_Report.csv'
-  };
 
   return (
       <Formik
