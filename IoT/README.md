@@ -157,6 +157,7 @@ I am a test for sanity purposes.
 > Note that you MUST whitelist your IP (over SoC vpn or in NUS network) to test the functionalities of IoT Receiver.
 > This can be done by running `nc ifs4205-gp02-5-i 4205` and providing your VPN IP.
 > The port 4205 is only accessible with SoC vpn, or NUS network.
+> For more information, refer to the Final Report, section "6.9. Utility Service for PenTesting/Functional Testing".
 
 After setting up the server, you can begin to configure the Dongles and Receivers.
 
@@ -250,14 +251,3 @@ python -m unittest discover -s . -p "IoT*Tests.py"
 ```
 
 This will run the `IoTServerTests.py` and `IoTRecvTests.py` files that performs unit testing for both `IoTServer.py` and `IoTRecv.py`.
-
-## TODO
-
-1. Integrate with DB end to pass data received on IoTServer into the DB.
-2. Continue with Unit Testing of cases. (IN PROGRESS)
-3. Write Github Actions workflow for automating testing of unit tests found in `test/` directory. (DONE)
-
-## TODO (When REPO is publicly deployed)
-
-1. Modify the `setup.sh` to clone from github repo.
-2. Sanity test the `./setup.sh` to make sure everything is working.
