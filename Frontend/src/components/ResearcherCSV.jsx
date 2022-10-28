@@ -17,7 +17,7 @@ class ResearcherCSV extends Component {
     }
     this.csvLinkEl = React.createRef();
   }
-
+ 
 
   getMedicalHistory = () => {
     return fetch('http://172.25.76.159:4000/research/researchdata')
@@ -25,7 +25,8 @@ class ResearcherCSV extends Component {
   }
 
   downloadReport = async () => {
-    const data = await this.getMedicalHistory();
+    const res = await fetch("http://172.25.76.159:4000/research/researchdata");
+    const data = await res.json();
     this.setState({ data: data }, () => {
       setTimeout(() => {
         this.csvLinkEl.current.link.click();
