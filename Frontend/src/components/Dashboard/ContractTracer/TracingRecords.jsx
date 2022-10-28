@@ -71,7 +71,7 @@ export default function TracingRecords() {
     };
 
     let dataForState = records.filter((item) => filterFunc(item));
-    if(dataForState.length === 0 || item === ''){
+    if(dataForState.length === 0 || dataForState === ''){
       setData(data);
       return;
     }
