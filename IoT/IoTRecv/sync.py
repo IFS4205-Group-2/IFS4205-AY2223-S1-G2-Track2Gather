@@ -109,7 +109,7 @@ def startScan(verifier):
                         ble.stop_scan()
                         exit()
                     except:
-                        logging.exception(datetime.datetime.now().time())
+                        print("Failed to retrieve key, retrying...")
                         found[mac] = False
                         if GMS_connection and GMS_connection.connected:
                             GMS_connection.disconnect()
