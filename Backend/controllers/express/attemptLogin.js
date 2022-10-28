@@ -25,8 +25,7 @@ const attemptLogin = async (req, res) => {
 
       jwtSign(
         {
-          username: req.body.username,
-          id: potentialLogin.rows[0].uid,
+          uid: potentialLogin.rows[0].uid,
           username: potentialLogin.rows[0].username,
         },
         process.env.JWT_SECRET,

@@ -22,7 +22,6 @@ const attemptRegister = async (req, res) => {
 
     jwtSign(
       {
-        username: req.body.username,
         uid: newUserQuery.rows[0].uid,
         username: newUserQuery.rows[0].username,
       },
