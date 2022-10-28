@@ -27,7 +27,7 @@ const attemptLogin = async (req, res) => {
         {
           username: req.body.username,
           id: potentialLogin.rows[0].uid,
-          userid: potentialLogin.rows[0].username,
+          username: potentialLogin.rows[0].username,
         },
         process.env.JWT_SECRET,
         { expiresIn: "15mins" } //to be changed

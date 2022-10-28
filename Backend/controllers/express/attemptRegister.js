@@ -23,8 +23,8 @@ const attemptRegister = async (req, res) => {
     jwtSign(
       {
         username: req.body.username,
-        id: newUserQuery.rows[0].id,
-        userid: newUserQuery.rows[0].userid,
+        uid: newUserQuery.rows[0].uid,
+        username: newUserQuery.rows[0].username,
       },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
