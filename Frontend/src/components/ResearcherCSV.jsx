@@ -19,7 +19,7 @@ class ResearcherCSV extends Component {
   }
 
   downloadReport = async () => {
-    const res = await fetch("http://172.25.76.159:4000/tracing/contacts");
+    const res = await fetch("http://172.25.76.159:4000/research/data");
     const data = await res.json();
     this.setState({ data: data }, () => {
       setTimeout(() => {
