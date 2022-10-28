@@ -7,6 +7,7 @@ const cors = require("cors");
 const authRouter = require("./routers/authRouter");
 const recordRouter = require("./routers/recordRouter");
 const contactRouter = require("./routers/contactRouter");
+const researchRouter = require("./routers/researchRouter");
 const pool = require("./db");
 const redisClient = require("./redis");
 const server = require("http").createServer(app);
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/tracing", recordRouter);
 app.use("/tracing", contactRouter);
+app.use("/researcher", researchRouter);
 app.set("trust proxy", 1); //???
 
 io.use(authorizeUser); //???

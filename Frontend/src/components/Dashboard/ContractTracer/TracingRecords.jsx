@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 
 export default function TracingRecords() {
   const { data: records, isSuccess } = useQuery(["records"], async () => {
-    const res = await fetch("http://172.25.76.159:4000/tracing/records");
+    const res = await fetch("http://172.25.76.159:4000/researcher/research");
     const data = await res.json();
     return data;
   });
