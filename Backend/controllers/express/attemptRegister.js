@@ -16,13 +16,13 @@ const attemptRegister = async (req, res) => {
       "SELECT uid FROM credentials c WHERE c.uid = (SELECT MAX (uid) FROM credentials)"
     );
     const newUserQuery = await pool.query(
-      "INSERT INTO users(uid, password_hash, username) values($1,$2,$3) RETURNING uid, password_hash, username",
-      [newUID + 1, req.body.username, hashedPass]
+      "INSERT INTO credentials(uid, password_hash, username) values($1,$2,$3) RETURNING uid, password_hash, username",
+      [newUID + 1, hashedPass, req.body.username]
     );
 
     jwtSign(
       {
-        uid: newUserQuery.rows[0].uid,
+        id: newUserQuery.rows[0].uid,
         username: newUserQuery.rows[0].username,
       },
       process.env.JWT_SECRET,

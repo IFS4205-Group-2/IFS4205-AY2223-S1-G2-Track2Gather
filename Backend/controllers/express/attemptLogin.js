@@ -25,8 +25,8 @@ const attemptLogin = async (req, res) => {
 
       jwtSign(
         {
-          uid: potentialLogin.rows[0].uid,
-          username: potentialLogin.rows[0].username,
+          id: potentialLogin.rows[0].uid,
+          username: req.body.username,
         },
         process.env.JWT_SECRET,
         { expiresIn: "15mins" } //to be changed
