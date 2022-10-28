@@ -56,19 +56,6 @@ export default function TracingRecords() {
     setData(dataToSort);
   };
 
-  const filterData = (target) => {
-    const filteredData = data.filter(row => row.tokenid1.toLocaleLowerCase().includes(target.toLocaleLowerCase())
-      || row.time1.toLocaleLowerCase().includes(target.toLocaleLowerCase())
-      || row.location1.toLocaleLowerCase().includes(target.toLocaleLowerCase())
-      || row.tokenid2.toLocaleLowerCase().includes(target.toLocaleLowerCase())
-      || row.time2.toLocaleLowerCase().includes(target.toLocaleLowerCase()));
-
-    if (filteredData.length === 0 || target === '') {
-      setData(data);
-      return;
-    }
-    setData(filteredData);
-  };
 
   const filterTable = (e) => {
     if (!isSuccess) return [];
@@ -102,7 +89,7 @@ export default function TracingRecords() {
         <p>Search for:</p>
         <input
           type="text"
-          onChange={(e) => filterData(e.target.value)}
+          onChange={(e) => filterTable(e.target.value)}
           placeholder="Search for Infectants and Time..."
           style={{
             background: "rgba(0,0,0,0.2)",
