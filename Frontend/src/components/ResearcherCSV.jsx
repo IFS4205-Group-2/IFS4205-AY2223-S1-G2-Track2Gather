@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { CSVLink } from "react-csv";
 
 const headers = [
-  { label: "gender", key: "gender" },
-  { label: "birthday", key: "birthday" },
-  { label: "zipcode", key: "zipcode" },
   { label: "vaccination", key: "vaccination" },
-  { label: "testresult", key: "testresult" }
+  { label: "gender", key: "gender" },
+  { label: "yearofbirth", key: "yearofbirth" },
+  { label: "postal", key: "postal" },
 ];
 
 class ResearcherCSV extends Component {
