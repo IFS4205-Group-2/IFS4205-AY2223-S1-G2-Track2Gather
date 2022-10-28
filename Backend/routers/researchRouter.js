@@ -5,8 +5,8 @@ const pool = require('../db');
 router.get("/research", async (req, res) => {
   try {
     
-    //const research = await pool.query("SELECT us.gender gender, us.date_of_birth birthday, us.zipcode zipcode, mh.vaccination_history vaccination, mh.recent_test_result testresult FROM medicalhistories mh LEFT JOIN users us ON us.uid = mh.uid;");
-    const research = await pool.query("SELECT name, contact_no, email, gender, zipcode, tid FROM users;");
+    const research = await pool.query("SELECT us.gender gender, us.date_of_birth birthday, us.zipcode zipcode, mh.vaccination_history vaccination, mh.recent_test_result testresult FROM medicalhistories mh LEFT JOIN users us ON us.uid = mh.uid;");
+   
     console.log("research request received");
     return res.status(200).json(research.rows);
   } catch (error) {
