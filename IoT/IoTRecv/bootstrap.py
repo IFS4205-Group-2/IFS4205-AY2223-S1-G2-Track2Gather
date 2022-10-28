@@ -8,6 +8,18 @@ from cryptography.hazmat.backends import default_backend
 cwd = os.path.dirname(os.path.realpath(__file__))
 serverDirectory = f"{cwd}/ServerGenKeys/"
 
+'''
+Generates the directories for storing the public-private key pair.
+'''
+def generateDirectory():
+    print("Generating Directory...")
+    for dir in [serverDirectory]:
+        if not os.path.exists(f"{dir}"):
+            os.makedirs(dir)
+            print(f"{dir} has been created.")
+        else:
+            print(f"{dir} already exists.")
+
 def printKeyAsIntArray(filename):
     keyPem = b''
     with open(serverDirectory + filename, 'r') as f:
@@ -45,7 +57,7 @@ def printPrivateKeyAsIntArray(filename):
 # Replace with address of NUS net/local IoT Server VM.
 sftpServer = config.ip
 
-
+generateDirectory()
 print("Retrieving Keys from Server...")
 with pysftp.Connection(sftpServer, username=config.sftp_user, password=config.sftp_password) as sftp:
     # To get files from server.
@@ -82,7 +94,6 @@ if len(sys.argv) > 1 and sys.argv[1] == "--all":
 
     if os.path.isfile(f"{cwd}/ServerGenKeys/defaultPrivateKey.pem"):
         os.remove(f"{cwd}/ServerGenKeys/defaultPrivateKey.pem")
-
 
 
 
