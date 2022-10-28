@@ -85,6 +85,9 @@ def writeToPEM(publicKey, mac):
             sftp.put(dongleDirectory + filename)
             print("Sent to IoT Server")
 
+    if os.path.isfile(dongleDirectory + filename):
+        os.remove(dongleDirectory + filename)
+
 def connectToDongle(GMS_connection, mac, verifier):
     if GMS_connection and GMS_connection.connected:
         publicKey = receiveAndVerifyPublicKey(GMS_connection, verifier)

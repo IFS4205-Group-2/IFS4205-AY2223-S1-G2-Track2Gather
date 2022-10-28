@@ -157,29 +157,6 @@ def constructPayload(ct, symKey, iv, tag, mac, serverPubKey, signer):
     return payload
 
 """
-Retrieve the dongle's public key to verify signature based on the dongle's MAC address
-"""
-def getDongleSignKey(mac):
-    pub_pem = b''
-    with open(dongleDirectory + mac.replace(":", "") + ".pem", "r") as f:
-        pub_pem = f.read()
-    pubSignKey = ECC.import_key(pub_pem)
-    verifier = eddsa.new(pubSignKey, mode='rfc8032')
-    return verifier
-
-"""
-For testing purposes, decrypt and verify plaintext from dongle
-"""
-def decryptAndVerification(symKey, iv, tag, ct, mac):
-    gcm = AES.new(symKey, AES.MODE_GCM, nonce=iv)
-    pt = gcm.decrypt_and_verify(ct, tag)
-    signature = pt[:SIG_BYTES]
-    plaintext = pt[SIG_BYTES:]
-    verifier = getDongleSignKey(mac)
-    verifier.verify(plaintext, signature)
-    return plaintext
-
-"""
 Send the encrypted payload to the server
 """
 def sendPayload(payload):
