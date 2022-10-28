@@ -56,7 +56,6 @@ export default function TracingRecords() {
     setData(dataToSort);
   };
 
-
   const filterTable = (e) => {
     if (!isSuccess) return [];
     let filterFunc = (item) => {
@@ -67,11 +66,15 @@ export default function TracingRecords() {
         item.tokenid2.toString().indexOf(e) >= 0 ||
         item.time2.indexOf(e) >= 0 
         
-        )
+      )
         return true;
     };
 
     let dataForState = records.filter((item) => filterFunc(item));
+    if(dataForState.length === 0 || item === ''){
+      setData(data);
+      return;
+    }
     setData(dataForState);
   };
 
