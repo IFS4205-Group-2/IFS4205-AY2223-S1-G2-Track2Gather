@@ -154,6 +154,10 @@ I am a test for sanity purposes.
 
 ## Setting up IoT Dongles and Receivers
 
+> Note that you MUST whitelist your IP (over SoC vpn or in NUS network) to test the functionalities of IoT Receiver.
+> This can be done by running `nc ifs4205-gp02-5-i 4205` and providing your VPN IP.
+> The port 4205 is only accessible with SoC vpn, or NUS network.
+
 After setting up the server, you can begin to configure the Dongles and Receivers.
 
 In this project, Receivers are simulated by Virtual Machines.
