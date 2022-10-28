@@ -33,7 +33,7 @@ const Login = () => {
         onSubmit={(values, actions) => {
           const vals = { ...values };
           actions.resetForm();
-          fetch("http://localhost:4000/auth/login", { //to be changed
+          fetch("http://172.25.76.159:4000/auth/login", { //to be changed
             method: "POST",
             credentials: "include",
             headers: {
