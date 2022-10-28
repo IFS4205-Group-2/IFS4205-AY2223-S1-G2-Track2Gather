@@ -70,7 +70,7 @@ export default function CloseContactInformation() {
         return true;
     };
 
-    let dataForState = data.filter((item) => filterFunc(item));
+    let dataForState = contacts.filter((item) => filterFunc(item));
     if(dataForState.length === 0 || dataForState === ''){
       setData(data);
       return;
