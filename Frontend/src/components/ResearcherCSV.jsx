@@ -50,4 +50,4 @@ class ResearcherCSV extends Component {
   }
 }
 
-export default AsyncCSV;
+export default ResearcherCSV;
