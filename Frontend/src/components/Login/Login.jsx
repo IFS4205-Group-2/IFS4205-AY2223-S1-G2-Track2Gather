@@ -93,7 +93,7 @@ const Login = () => {
             </Button>
           </ButtonGroup>
         </VStack>
-        <ResearcherCSV />
+       
         
       </Formik>
   );
