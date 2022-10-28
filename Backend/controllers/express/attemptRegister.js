@@ -5,23 +5,25 @@ const { jwtSign } = require("../jwt/jwtAuth");
 
 const attemptRegister = async (req, res) => {
   const existingUser = await pool.query(
-    "SELECT username from users WHERE username=$1",
+    "SELECT username from credentials WHERE username=$1",
     [req.body.username]
   );
 
   if (existingUser.rowCount === 0) {
     // register
     const hashedPass = await bcrypt.hash(req.body.password, 10);
+    const newUID = await pool.query(
+      "SELECT uid FROM credentials c WHERE c.uid = (SELECT MAX (uid) FROM credentials)"
+    );
     const newUserQuery = await pool.query(
-      "INSERT INTO users(username, passhash, userid) values($1,$2,$3) RETURNING id, username, userid",
-      [req.body.username, hashedPass, uuidv4()]
+      "INSERT INTO credentials(uid, password_hash, username) values($1,$2,$3) RETURNING uid, password_hash, username",
+      [newUID.rows[0].uid + 1, hashedPass, req.body.username]
     );
 
     jwtSign(
       {
-        username: req.body.username,
-        id: newUserQuery.rows[0].id,
-        userid: newUserQuery.rows[0].userid,
+        id: newUserQuery.rows[0].uid,
+        username: newUserQuery.rows[0].username,
       },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }

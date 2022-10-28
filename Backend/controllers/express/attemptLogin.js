@@ -8,17 +8,16 @@ const logtail = new Logtail(process.env.LOGTAIL_BACKEND_SOURCE_TOKEN);
 
 const attemptLogin = async (req, res) => {
   const potentialLogin = await pool.query(
-    "SELECT id, username, passhash, userid FROM users u WHERE u.username=$1",
+    "SELECT uid, password_hash, username FROM credentials c WHERE c.username=$1",
     [req.body.username]
   );
 
   if (potentialLogin.rowCount > 0) {
     const isSamePass = await bcrypt.compare(
       req.body.password,
-      potentialLogin.rows[0].passhash
+      potentialLogin.rows[0].password_hash
     );
     if (isSamePass) {
-
       const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
       logtail.info("User " + req.body.username + " in via login page.", {
         ipaddress: ip
@@ -26,9 +25,8 @@ const attemptLogin = async (req, res) => {
 
       jwtSign(
         {
+          id: potentialLogin.rows[0].uid,
           username: req.body.username,
-          id: potentialLogin.rows[0].id,
-          userid: potentialLogin.rows[0].userid,
         },
         process.env.JWT_SECRET,
         { expiresIn: "15mins" } //to be changed

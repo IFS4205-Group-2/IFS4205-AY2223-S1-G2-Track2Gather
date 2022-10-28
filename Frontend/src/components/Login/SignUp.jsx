@@ -26,7 +26,7 @@ const SignUp = () => {
       onSubmit={(values, actions) => {
         const vals = { ...values };
         actions.resetForm();
-        fetch("ttp://172.25.76.159:4000/auth/signup", { //to be changed
+        fetch("http://172.25.76.159:4000/auth/signup", { //to be changed
           method: "POST",
           credentials: "include",
           headers: {

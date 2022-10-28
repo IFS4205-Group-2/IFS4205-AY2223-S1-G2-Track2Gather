@@ -16,7 +16,7 @@ const handleLogin = async (req, res) => {
   jwtVerify(token, process.env.JWT_SECRET)
     .then(async decoded => {
       const potentialUser = await pool.query(
-        "SELECT username FROM users u WHERE u.username = $1",
+        "SELECT username FROM credentials c WHERE c.username = $1",
         [decoded.username]
       );
 
