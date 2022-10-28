@@ -71,6 +71,10 @@ export default function CloseContactInformation() {
     };
 
     let dataForState = data.filter((item) => filterFunc(item));
+    if(dataForState.length === 0 || dataForState === ''){
+      setData(data);
+      return;
+    }
     setData(dataForState);
   };
 
