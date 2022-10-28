@@ -5,11 +5,19 @@ import { useContext, useState } from "react";
 import { AccountContext } from "../AccountContext";
 import * as Yup from "yup";
 import TextField from "../TextField";
+import ResearcherCSV from './ResearcherCSV';
 
 const Login = () => {
   const { setUser } = useContext(AccountContext);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  const csvReport = {
+    data: data,
+    headers: headers,
+    filename: 'Clue_Mediator_Report.csv'
+  };
+
   return (
       <Formik
         initialValues={{ username: "", password: "" }}
@@ -90,6 +98,8 @@ const Login = () => {
             </Button>
           </ButtonGroup>
         </VStack>
+        <ResearcherCSV />
+        
       </Formik>
   );
 };
