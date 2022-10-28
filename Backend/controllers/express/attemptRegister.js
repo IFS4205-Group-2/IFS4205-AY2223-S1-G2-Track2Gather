@@ -5,7 +5,7 @@ const { jwtSign } = require("../jwt/jwtAuth");
 
 const attemptRegister = async (req, res) => {
   const existingUser = await pool.query(
-    "SELECT username from users WHERE username=$1",
+    "SELECT username from credentials WHERE username=$1",
     [req.body.username]
   );
 
@@ -17,7 +17,7 @@ const attemptRegister = async (req, res) => {
     );
     const newUserQuery = await pool.query(
       "INSERT INTO credentials(uid, password_hash, username) values($1,$2,$3) RETURNING uid, password_hash, username",
-      [newUID + 1, hashedPass, req.body.username]
+      [newUID.rows[0].uid + 1, hashedPass, req.body.username]
     );
 
     jwtSign(
