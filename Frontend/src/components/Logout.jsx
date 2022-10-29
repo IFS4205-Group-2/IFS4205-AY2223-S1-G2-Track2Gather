@@ -11,9 +11,9 @@ const Logout = () => {
   };
 
   return (
-    <ButtonGroup pt="1rem">
-        <Button oonClick={handleLogOut}>
-            Create Account
+  <ButtonGroup pt="1rem">
+        <Button colorScheme="teal" onClick={handleLogOut}>
+            Log Out
         </Button>
   </ButtonGroup>
     
