@@ -14,8 +14,8 @@ const UserContext = ({ children }) => {
     fetch("http://172.25.76.159:4000/auth/login", {
       credentials: "include",
       headers: {
-        authorization: `Bearer ${user.token}`,
-      },
+        authorization: `Bearer ${user.token}`
+      }
     })
       .catch(err => {
         setUser({ loggedIn: false });

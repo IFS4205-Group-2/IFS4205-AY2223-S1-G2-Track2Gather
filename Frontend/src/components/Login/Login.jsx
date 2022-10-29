@@ -6,11 +6,28 @@ import { AccountContext } from "../AccountContext";
 import * as Yup from "yup";
 import TextField from "../TextField";
 import ResearcherCSV from "../ResearcherCSV";
+import { JSEncrypt } from "jsencrypt";
 
 const Login = () => {
   const { setUser } = useContext(AccountContext);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const encrypt = new JSEncrypt();  
+
+  const publicKey = `-----BEGIN PUBLIC KEY-----
+  MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA0erjMYWiedDlOG5dVoxs
+  8v59e5cW4mtkHsYhcc+XkMDNbWh66+34hI5ZZxmQdi+rANAaA/Ho4WaIGVTmInSr
+  oo5JWQ0I/bpBHfA0tD2VYALI5mwTQrbSKGT/2H4xRs49GlhY0NJ02+wVSq2Ks21+
+  R8+aAoDiQdP0ZrKAqaEmNCZufYDIK81PEHSlOYoXpyy9OBzWD143rEr5jq8oQXXH
+  ZZXhUPfDmSzpb7DvF0jiOl36HfmX08xojzJ2lX/LRObAVYNQrbMxfUPQlLST2+lz
+  GsqsfQQMJgtCP3WsZehI2kKrb8M0bZCvrplJ4K3GYUDgU9AqGdSdy2QjP1NfGVUM
+  5jOEgBRDLuEicmCuNCddhRGkYNt4XnV6dzgWj2/Z/lqYv0IJvygA/wC8UqQakuYj
+  bhTET72ApPOfHC4Wc4vRN3jx8ViOPaN/SOJ9vdhlw5n0AXWPTGyQ+JeEtLp/sxsd
+  sNWe+pBQ+RWUG2S1qqzMaBFG9lwK9wLrqQoyRkqwtmjw1MFW3hdDJXvOEv7BCdd4
+  eKfYQqT4KjU2Eh+LLi6qdbE6uOsfUEKDUxW0fdtIuvPsDpunX6swLSju0dAjhhT1
+  hcgyFwHB3bq0srrk7IilLF9DyLKaDi8mZA2VOf1myxCorbIVSHChnvgiDljTNLib
+  +/UymJN/9kenYk2whVu9nhMCAwEAAQ==
+  -----END PUBLIC KEY-----`;
 
 
   return (
@@ -27,14 +44,23 @@ const Login = () => {
       
         onSubmit={(values, actions) => {
           const vals = { ...values };
+          
+          //encrypt values submitted
+          encrypt.setPublicKey(publicKey);
+          //console.log(encrypted);
+
           actions.resetForm();
-          fetch("http://172.25.76.159:4000/auth/login", { //to be changed
+          fetch("http://localhost:4000/auth/login", { //to be changed
             method: "POST",
             credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(vals),
+            body: JSON.stringify(
+              {
+                "username": encrypt.encrypt(vals.username),
+                "password": encrypt.encrypt(vals.password)
+            })
           })
             .catch(err => {
               return;
