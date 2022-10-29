@@ -1,5 +1,6 @@
 import { Box, Stack } from "@chakra-ui/react";
 import NavItem from "./NavItem";
+import Logout from "../Logout";
 
 export default function NavLink({ isOpen }) {
   return (
@@ -15,6 +16,7 @@ export default function NavLink({ isOpen }) {
         pt={[4, 4, 0, 0]}
       >
         <NavItem to="/home">Home</NavItem>
+        <Logout />
       </Stack>
     </Box>
   );
