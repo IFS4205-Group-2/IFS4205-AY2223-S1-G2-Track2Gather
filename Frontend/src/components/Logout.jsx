@@ -12,7 +12,7 @@ const Logout = () => {
 
   return (
   <ButtonGroup pt="1rem">
-        <Button colorScheme="teal" onClick={handleLogOut}>
+        <Button colorScheme="red" onClick={handleLogOut}>
             Log Out
         </Button>
   </ButtonGroup>
