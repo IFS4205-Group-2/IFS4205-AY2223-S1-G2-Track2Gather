@@ -59,7 +59,7 @@ const handleAddUser = async (req, res) => {
 
       const medicalResult = await pool.query(
         "INSERT INTO MedicalHistories (uid, vaccination_history, recent_test_result) VALUES ($1, $2, $3);",
-        [userId, null, 'No test results']
+        [userId, null, null]
       );
 
       if (medicalResult.rowCount === 1) {
