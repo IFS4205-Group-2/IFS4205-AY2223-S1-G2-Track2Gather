@@ -181,7 +181,7 @@ export default function UserInformation() {
                   })}
                   
                   onSubmit={(values, actions) => {
-                    const vals = { ...values, uid: originalDataRef.current[selectedUser].uid };
+                    const vals = { ...values, uid: selectedUser.uid };
                     actions.resetForm();
                     fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/user/admin/update", {
                       method: "POST",
