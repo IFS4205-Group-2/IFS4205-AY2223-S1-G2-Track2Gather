@@ -251,7 +251,7 @@ export default function AccountManagement() {
                   if (!data) return;
                 })
                 .finally(() => {
-                  // window.location.reload();
+                  window.location.reload();
                 })
               }}>
               <VStack
