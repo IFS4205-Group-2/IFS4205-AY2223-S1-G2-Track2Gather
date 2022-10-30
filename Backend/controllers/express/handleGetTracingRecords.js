@@ -1,5 +1,5 @@
 const { jwtVerify, getJwt } = require("../jwt/jwtAuth");
-const pool = require("../../db2");
+const pool = require("../../db");
 require("dotenv").config();
 const { Logtail } = require("@logtail/node");
 const logtail = new Logtail(process.env.LOGTAIL_BACKEND_SOURCE_TOKEN);
@@ -20,7 +20,7 @@ const handleGetTracingRecords = async (req, res) => {
       );
       
       const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-      logtail.info("Contact Tracer " + decoded.username + " is fetching tracing records.", {
+      logtail.info("Contact Tracer " + decoded.username + " is fetching tracing records information.", {
         ipaddress: ip
       });
 
