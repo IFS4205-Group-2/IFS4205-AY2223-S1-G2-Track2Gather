@@ -11,7 +11,7 @@ const attemptLogin = async (req, res) => {
     "SELECT uid, password_hash, username FROM credentials c WHERE c.username=$1",
     [req.body.username]
   );
-
+ 
   if (potentialLogin.rowCount > 0) {
     const isSamePass = await bcrypt.compare(
       req.body.password,
@@ -29,7 +29,7 @@ const attemptLogin = async (req, res) => {
           username: req.body.username,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "15mins" } //to be changed
+        { expiresIn: "20mins" }
       )
         .then(token => {
           res.json({ loggedIn: true, token });
@@ -40,7 +40,6 @@ const attemptLogin = async (req, res) => {
         });
     } else {
       res.json({ loggedIn: false, status: "Wrong username or password!" });
-      console.log("wrong pass");
     }
   } else {
     res.json({ loggedIn: false, status: "Wrong username or password!" });
