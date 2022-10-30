@@ -20,7 +20,7 @@ const handleAddTokenInfo = async (req, res) => {
         [req.body.tokenID.toLowerCase().replace(/:/g, "-")]
       );
 
-      if (tokenExists.rows[0].status === 1) {
+      if (tokenExists.rowCount !== 0 && tokenExists.rows[0].status === 1) {
         res.json({ status_code: -1, status_message: 'Token is assigned to other user.'});
         return;
       }
@@ -35,8 +35,8 @@ const handleAddTokenInfo = async (req, res) => {
       } else {
         const currDate = new Date();
         tokenResult = await pool.query(
-          "INSERT INTO Tokens (tid, assignedDate, status) VALUES($1, $2, 1);",
-          [req.body.tokenID.toLowerCase().replace(/:/g, "-"), currDate]
+          "INSERT INTO Tokens (tid, assignedDate, status) VALUES($1, $2, $3);",
+          [req.body.tokenID.toLowerCase().replace(/:/g, "-"), currDate, 1]
         );
       }
 
