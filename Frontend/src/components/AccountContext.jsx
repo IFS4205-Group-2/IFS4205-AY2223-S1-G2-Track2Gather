@@ -34,7 +34,7 @@ const UserContext = ({ children }) => {
           return;
         }
         setUser({ ...data });
-        navigate("/home");
+        navigate("/dashboard");
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
