@@ -52,7 +52,7 @@ const Login = () => {
                 setError(data.status);
               } else if (data.loggedIn) {
                 localStorage.setItem("token", data.token);
-                navigate("/home");
+                navigate("/dashboard");
               }
             });
         }}

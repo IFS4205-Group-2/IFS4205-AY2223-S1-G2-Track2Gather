@@ -4,36 +4,32 @@ require("dotenv").config();
 const { Logtail } = require("@logtail/node");
 const logtail = new Logtail(process.env.LOGTAIL_BACKEND_SOURCE_TOKEN);
 
-const handleLogin = async (req, res) => {
+const handleGetUserInfo = async (req, res) => {
 
   const token = getJwt(req);
 
-  if (!token || token == null) {
-    res.json({ loggedIn: false });
+  if (!token || token === "null") {
+    res.json({ status_code: -1 });
     return;
   }
 
   jwtVerify(token, process.env.JWT_SECRET)
     .then(async decoded => {
-      const potentialUser = await pool.query(
-        "SELECT username FROM credentials WHERE uid = $1",
+      const userInfos = await pool.query(
+        "SELECT name, OVERLAY(nric placing '*****' from 1 for 5) AS nric, address, contact_no, email FROM users WHERE uid = $1;",
         [decoded.userid]
       );
-
-      if (potentialUser.rowCount === 0) {
-        res.json({ loggedIn: false, token: null });
-        return;
-      }
+      
       const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-      logtail.info("User " + decoded.username + " in using their token.", {
+      logtail.info("User " + decoded.username + " is fetching their personal information.", {
         ipaddress: ip
       });
 
-      res.json({ loggedIn: true, token });
+      res.json({ status_code: 0, ...userInfos.rows[0] });
     })
     .catch(() => {
-      res.json({ loggedIn: false });
+      res.json({ status_code: -1 });
     });
 };
 
-module.exports = handleLogin;
+module.exports = handleGetUserInfo;

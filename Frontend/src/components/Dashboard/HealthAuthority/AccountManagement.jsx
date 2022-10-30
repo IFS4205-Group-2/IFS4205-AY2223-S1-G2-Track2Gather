@@ -1,65 +1,67 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, ButtonGroup, FormLabel, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Radio, RadioGroup, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, VStack } from "@chakra-ui/react";
-import { Form, Formik } from "formik";
-import { useState, useRef } from "react";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, ButtonGroup, FormLabel, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, RadioGroup, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, VStack } from "@chakra-ui/react";
+import { Field, Form, Formik } from "formik";
+import { useRef, useState } from "react";
 import * as Yup from "yup";
 import TextField from "../../TextField";
-
-const fetchedData = [
-  {
-    'nric': 'SXXXX123D',
-    'name': 'Tan Boon Huat',
-    'phoneNumber': '87616251',
-    'homeAddress': 'Singapore',
-    'email': 'team2@test.com',
-    'role': 'Contact Tracer',
-    'creationDate': '2020/07/05'
-  },
-  {
-    'nric': 'TXXXX221X',
-    'name': 'Lim Kai Heng',
-    'phoneNumber': '91872811',
-    'homeAddress': 'Aljunied',
-    'email': 'kewen@test.com',
-    'role': 'User',
-    'creationDate': '2020/07/08'
-  },
-  {
-    'nric': 'TXXXX999D',
-    'name': 'Chua Chin Chan',
-    'phoneNumber': '90127451',
-    'homeAddress': 'One north',
-    'email': 'google@test.com',
-    'role': 'Contact Tracer',
-    'creationDate': '2020/07/09'
-  },
-  {
-    'nric': 'SXXXX456A',
-    'name': 'Loh Kean Ming',
-    'phoneNumber': '89273651',
-    'homeAddress': 'Kent Ridge',
-    'email': 'test@test.com',
-    'role': 'User',
-    'creationDate': '2020/07/10'
-  }
-]
 
 export default function AccountManagement() {
   const { isOpen: showDeleteDialog, onOpen: onOpenDeleteDialog, onClose: onCloseDeleteDialog } = useDisclosure();
   const { isOpen: showAddDialog, onOpen: onOpenAddDialog, onClose: onCloseAddDialog } = useDisclosure();
   const [selectedUser, setSelectedUser] = useState('');
   const cancelRef = useRef();
-  const [data, setData] = useState(fetchedData || []);
+  const originalDataRef = useRef([]);
+  const [data, setData] = useState([]);
+  const token = localStorage.getItem("token");
 
-  const handleOnDelete = (nric) => {
-    setSelectedUser(nric);
+  useState(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch('http://172.25.76.159:4000/user/infos', {
+          credentials: "include",
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+        const { status_code, userInfos } = await res.json();
+        if (status_code === 0) {
+          originalDataRef.current = userInfos;
+          setData(userInfos);
+          return;
+        }
+      } catch(e) {
+        console.log(e);
+        return;
+      }
+    }
+    fetchData();
+  }, [token]);
+
+  const handleOnDelete = (uid) => {
+    setSelectedUser(uid);
+    console.log(uid);
     onOpenDeleteDialog();
   }
 
   const handleOnDeleteConfirmation = () => {
-    // Post delete result to backend
-    console.log(selectedUser);
-    onCloseDeleteDialog();
-    window.location.reload(false);
+    fetch("http://172.25.76.159:4000/user/delete", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ "uid": selectedUser }),
+    })
+    .catch(err => {
+      console.log(err);
+      return;
+    })
+    .then(res => {
+      return;
+    })
+    .finally(() => {
+      window.location.reload();
+    })
   }
 
   const handleOnAdd = () => {
@@ -67,11 +69,11 @@ export default function AccountManagement() {
   }
 
   const filterData = (target) => {
-    const filteredData = data.filter(row => row.nric.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+    const filteredData = originalDataRef.current.filter(row => row.nric.toLocaleLowerCase().includes(target.toLocaleLowerCase())
       || row.name.toLocaleLowerCase().includes(target.toLocaleLowerCase())
       || row.role.toLocaleLowerCase().includes(target.toLocaleLowerCase()));
     if (filteredData.length === 0 || target === '') {
-      setData(fetchedData);
+      setData(originalDataRef.current);
       return;
     }
     setData(filteredData);
@@ -103,23 +105,24 @@ export default function AccountManagement() {
           }}
         />
       </div>
+      <ButtonGroup pt="1rem" m={"0 0 10px 0"} w={"100%"} justifyContent={"right"}>
+        <Button colorScheme="teal" type="button" onClick={handleOnAdd}>
+          Add Account
+        </Button>
+      </ButtonGroup>
       <TableContainer>
-        <ButtonGroup pt="1rem" m={"0 0 10px 0"} w={"100%"} justifyContent={"right"}>
-          <Button colorScheme="teal" type="button" onClick={handleOnAdd}>
-            Add Account
-          </Button>
-        </ButtonGroup>
         <Table variant='simple' colorScheme={'facebook'}>
           <Thead>
             <Tr>
               <Th>No.</Th>
               <Th>NRIC</Th>
+              <Th>Username</Th>
               <Th>Full Name</Th>
               <Th>Contact Number</Th>
               <Th>Home Address</Th>
               <Th>Email Address</Th>
+              <Th>Gender</Th>
               <Th>Role</Th>
-              <Th>Creation Date</Th>
               <Th>Action</Th>
             </Tr>
           </Thead>
@@ -130,13 +133,14 @@ export default function AccountManagement() {
                   <Tr key={`${info.tokenID}-${index}`}>
                     <Td>{index + 1}</Td>
                     <Td>{info.nric}</Td>
+                    <Td>{info.username}</Td>
                     <Td>{info.name}</Td>
-                    <Td>{info.phoneNumber}</Td>
-                    <Td>{info.homeAddress}</Td>
+                    <Td>{info.contact_no}</Td>
+                    <Td>{info.address}</Td>
                     <Td>{info.email}</Td>
+                    <Td>{info.gender}</Td>
                     <Td>{info.role}</Td>
-                    <Td>{info.creationDate}</Td>
-                    <Td><Button colorScheme="red" type="button" onClick={() => handleOnDelete(info.nric)}>Delete</Button></Td>
+                    <Td><Button colorScheme="red" type="button" onClick={() => handleOnDelete(info.uid)}>Delete</Button></Td>
                   </Tr>
                 )
               })
@@ -173,7 +177,6 @@ export default function AccountManagement() {
         </AlertDialogOverlay>
       </AlertDialog>
       <Modal
-        isCentered
         onClose={onCloseAddDialog}
         isOpen={showAddDialog}
         motionPreset='slideInBottom'
@@ -185,24 +188,53 @@ export default function AccountManagement() {
           <ModalCloseButton />
           <ModalBody>
             <Formik
-              initialValues={{ name: "", nric: "", address: "", phoneno: "", email: "", password: "", role: "" }}
+              initialValues={{ name: "", nric: "", username: "", address: "", phoneno: "", email: "", password: "", gender: "" }}
               validationSchema={Yup.object({
+                nric: Yup.string()
+                  .required("NRIC required!")
+                  .min(9, "NRIC is too short!")
+                  .max(9, "NRIC is too long!")
+                  .matches(/^[STGF]{1}[\d]{7}[A-Z]{1}$/, "Please ensure that your NRIC is correct!"),
+                name: Yup.string()
+                  .required("Full name is required!")
+                  .matches(/^[A-Za-z\d. -]{1,}$/, "Please ensure that you name is correct!"),
                 username: Yup.string()
-                  .required("Username required!")
-                  .min(6, "Username too short!"),
+                  .required("Username is required!")
+                  .min(6, "Username too short!")
+                  .matches(/^[A-Za-z\d. -]{1,}$/, "Please ensure that you username is correct!"),
+                address: Yup.string()
+                  .required("Address required!")
+                  .matches(/^[A-Za-z\d,. \-#()]{1,}$/, "Please ensure that your address is correct!"),
+                phoneno: Yup.string()
+                  .required("Phone number required!")
+                  .matches(/^[\d]{8}$/, "Please ensure that your phone number is correct!"),
+                email: Yup.string()
+                  .required("Email address required!")
+                  .matches(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, "Please ensure that your email address is correct!"),
+                role: Yup.string()
+                  .required("Role required!")
+                  .matches(/^[23]{1}$/, "Please ensure that the chosen role is valid!"),
+                gender: Yup.string()
+                  .required("Gender required!")
+                  .matches(/^Male|Female$/, "Please ensure that the chosen gender is valid!"),
                 password: Yup.string()
                   .required("Password required!")
-                  .min(12, "Password too short!"),
+                  .min(12, "Password too short!")
+                  .matches(/[A-Z]/, "Your password must contain at least one uppercase character.")
+                  .matches(/[a-z]/, "Your password must contain at least one lowercase character.")
+                  .matches(/[\d]/, "Your password must contain at least one digit.")
+                  .matches(/[$-/:-?{-~!"^_`[\]#]/, "Your password must contain at least one special character.")
               })}
               
               onSubmit={(values, actions) => {
                 const vals = { ...values };
                 actions.resetForm();
-                fetch("http://localhost:4000/user/add", {
+                fetch("http://172.25.76.159:4000/user/add", {
                   method: "POST",
                   credentials: "include",
                   headers: {
                     "Content-Type": "application/json",
+                    authorization: `Bearer ${token}`,
                   },
                   body: JSON.stringify(vals),
                 })
@@ -217,13 +249,23 @@ export default function AccountManagement() {
                 })
                 .then(data => {
                   if (!data) return;
-                });
-                }}>
+                })
+                .finally(() => {
+                  // window.location.reload();
+                })
+              }}>
               <VStack
                 as={Form}
                 w={'100%'}
                 spacing="1rem"
               >
+                <TextField
+                  name="username"
+                  autoComplete="off"
+                  label="Username"
+                  type="text"
+                />
+
                 <TextField
                   name="name"
                   autoComplete="off"
@@ -259,11 +301,31 @@ export default function AccountManagement() {
                   type="email"
                 />
 
+                <RadioGroup name="gender" w={"100%"}>
+                  <FormLabel>Gender</FormLabel>
+                  <Stack>
+                    <label>
+                      <Field type="radio" name="gender" value="Male" />
+                      <span style={{"padding-left": "10px"}}>Male</span>
+                    </label>
+                    <label>
+                      <Field type="radio" name="gender" value="Female" />
+                      <span style={{"padding-left": "10px"}}>Female</span>
+                    </label>
+                  </Stack>
+                </RadioGroup>
+
                 <RadioGroup name="role" w={"100%"}>
                   <FormLabel>Role</FormLabel>
                   <Stack>
-                    <Radio value={"User"}>User</Radio>
-                    <Radio value={"Contact Tracer"}>Contact Tracer</Radio>
+                    <label>
+                      <Field type="radio" name="role" value="3" />
+                      <span style={{"padding-left": "10px"}}>Public User</span>
+                    </label>
+                    <label>
+                      <Field type="radio" name="role" value="2" />
+                      <span style={{"padding-left": "10px"}}>Contact Tracer</span>
+                    </label>
                   </Stack>
                 </RadioGroup>
 

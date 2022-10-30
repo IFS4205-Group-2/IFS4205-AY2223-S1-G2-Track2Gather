@@ -60,11 +60,11 @@ export default function TracingRecords() {
     if (!isSuccess) return [];
     let filterFunc = (item) => {
       if (
-        item.tokenid1.toString().indexOf(e) >= 0 ||
-        item.time1.indexOf(e) >= 0 ||
+        item?.tokenid1?.toString().indexOf(e) >= 0 ||
+        item.time1.toString().indexOf(e) >= 0 ||
         item.location1.indexOf(e) >=0 ||
-        item.tokenid2.toString().indexOf(e) >= 0 ||
-        item.time2.indexOf(e) >= 0 
+        item?.tokenid2?.toString().indexOf(e) >= 0 ||
+        item.time2.toString().indexOf(e) >= 0 
         
       )
         return true;
