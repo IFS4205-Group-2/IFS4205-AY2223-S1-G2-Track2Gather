@@ -88,9 +88,6 @@ const Login = () => {
             <Button colorScheme="teal" type="submit">
               Log In
             </Button>
-            <Button onClick={() => navigate("/register")}>
-              Create Account
-            </Button>
           </ButtonGroup>
           <ResearcherCSV />
         </VStack>
