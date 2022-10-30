@@ -66,13 +66,13 @@ export default function PersonalStats() {
           overflow='hidden'
         >
           <Center h='100%' color='green.400'>
-            <CircularProgress value={data?.vaccinationHistory?.match(/\d+/g).length !== 0 ? ((data?.vaccinationHistory?.match(/\d+/g)[0] / 3) * 100) : 0} color='green.400'>
-              <CircularProgressLabel>{data?.vaccinationHistory?.match(/\d+/g).length !== 0 ? ((data?.vaccinationHistory?.match(/\d+/g)[0] / 3) * 100) : 0}%</CircularProgressLabel>
+            <CircularProgress value={data?.vaccinationHistory?.match(/\d+/g) != null ? ((data?.vaccinationHistory?.match(/\d+/g)[0] / 3) * 100) : 0} color='green.400'>
+              <CircularProgressLabel>{data?.vaccinationHistory?.match(/\d+/g) != null ? ((data?.vaccinationHistory?.match(/\d+/g)[0] / 3) * 100) : 0}%</CircularProgressLabel>
             </CircularProgress>
             <Text fontSize='md' fontWeight={'700'} marginLeft={'20px'}>
-              You have taken {data?.vaccinationHistory?.match(/\d+/g).length !== 0 ? (data?.vaccinationHistory?.match(/\d+/g)[0]) : 0} vaccination shot(s)!
+              You have taken {data?.vaccinationHistory?.match(/\d+/g) != null ? (data?.vaccinationHistory?.match(/\d+/g)[0]) : 0} vaccination shot(s)!
               <br />
-              {data?.vaccinationHistory?.match(/\d+/g).length !== 0 ? (3 - data?.vaccinationHistory?.match(/\d+/g)[0]) : 3} more shot(s) before fully vaccinated.
+              {data?.vaccinationHistory?.match(/\d+/g) != null ? (3 - data?.vaccinationHistory?.match(/\d+/g)[0]) : 3} more shot(s) before fully vaccinated.
             </Text>
           </Center>
         </Box>
