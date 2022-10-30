@@ -1,8 +1,33 @@
 import { Box, Center, CircularProgress, CircularProgressLabel, Flex, Text } from "@chakra-ui/react";
+import { useState } from "react";
 import CytoscapeComponent from 'react-cytoscapejs';
 
 export default function ContactTracerOverview() {
-  
+  const [data, setData] = useState({});
+  const token = localStorage.getItem("token");
+
+  useState(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/stats/contacttracer', {
+          credentials: "include",
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+        const { status_code, statistics } = await res.json();
+        if (status_code === 0) {
+          setData(statistics);
+          return;
+        }
+      } catch(e) {
+        console.log(e);
+        return;
+      }
+    }
+    fetchData();
+  }, [token]);
+
   const elements = [
     { data: { id: 'one', label: 'Alice' } },
     { data: { id: 'two', label: 'Bernard' } },
@@ -26,12 +51,12 @@ export default function ContactTracerOverview() {
           borderRadius='lg'
           overflow='hidden'
         >
-          <Center h='100%' color='green.400'>
-            <CircularProgress value={67} color='green.400'>
-              <CircularProgressLabel>95%</CircularProgressLabel>
-            </CircularProgress>
-            <Text fontSize='md' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
-              5 Infectants to inform
+          <Center h='100%' color='red.400'>
+            <Text fontSize='32px' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
+              {data.totalCases || '0'}
+            </Text>
+            <Text fontSize='md' fontWeight={'500'} marginLeft={'20px'} textAlign={'center'}>
+              Total Active Cases
             </Text>
           </Center>
         </Box>
@@ -43,8 +68,11 @@ export default function ContactTracerOverview() {
           overflow='hidden'
         >
           <Center h='100%' color='green.400'>
-            <Text fontSize='md' fontWeight={'700'} marginLeft={'20px'}>
-              1111 cases reported 
+            <Text fontSize='32px' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
+              {data.closeContactCases || '0'}
+            </Text>
+            <Text fontSize='md' fontWeight={'500'} marginLeft={'20px'} textAlign={'center'}>
+              Close Contacts 
             </Text>
           </Center>
           
