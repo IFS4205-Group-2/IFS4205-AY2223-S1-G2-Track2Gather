@@ -95,10 +95,11 @@ def logSignatureError():
         'Time': current_time
     })
     
-def logBluetoothError():
+def logError(e):
     current_time = datetime.datetime.now().isoformat(timespec='seconds').replace('T', ' ')
-    logger.error("Temporary Bluetooth Error", extra={
-        'Time': current_time
+    logger.error("Temporary Error", extra={
+        'Time': current_time,
+        'Error': str(e)
     })
 
 """
@@ -198,8 +199,8 @@ def main(GMS_connection, serverPubKey, signer):
                     logDongleDisconnection()
                 logRecvStop()
                 exit()
-            except:
-                logBluetoothError()
+            except Exception as e:
+                logError(e)
             finally:
                 if GMS_connection and GMS_connection.connected:
                     GMS_connection.disconnect()
