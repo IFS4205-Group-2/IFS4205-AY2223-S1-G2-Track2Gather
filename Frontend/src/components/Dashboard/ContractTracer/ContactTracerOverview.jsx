@@ -27,19 +27,6 @@ export default function ContactTracerOverview() {
     }
     fetchData();
   }, [token]);
-  console.log(data);
-  const elements = [
-    { data: { id: 'one', label: 'Alice' } },
-    { data: { id: 'two', label: 'Bernard' } },
-    { data: { id: 'three', label: 'Claira' } },
-    { data: { id: 'four', label: 'David' } },
-    { data: { id: 'five', label: 'Emily' } },
-    { data: { source: 'one', target: 'two', label: 'Edge from Node1 to Node2' } },
-    { data: { source: 'one', target: 'three', label: 'Edge from Node1 to Node3' } },
-    { data: { source: 'two', target: 'three', label: 'Edge from Node2 to Node3' } },
-    { data: { source: 'three', target: 'four', label: 'Edge from Node3 to Node4' } },
-    { data: { source: 'three', target: 'five', label: 'Edge from Node3 to Node5' } }
-  ];
 
   return (
     <>
@@ -85,11 +72,7 @@ export default function ContactTracerOverview() {
         borderWidth='1px'
         borderRadius='lg'
       >
-        <CytoscapeComponent
-          elements={elements}
-          style={{ width: '100%', height: '400px' }}
-          layout={{ name: 'grid', fit: true }}
-        />
+      
       </Box>
     </>
   );
