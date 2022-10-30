@@ -69,7 +69,7 @@ export default function ContactTracerOverview() {
         >
           <Center h='100%' color='green.400'>
             <Text fontSize='32px' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
-              {data.closeContactCases || '0'}
+              {data.closeCases || '0'}
             </Text>
             <Text fontSize='md' fontWeight={'500'} marginLeft={'20px'} textAlign={'center'}>
               Close Contacts 

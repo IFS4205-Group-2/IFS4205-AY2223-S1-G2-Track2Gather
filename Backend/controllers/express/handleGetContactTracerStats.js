@@ -20,7 +20,7 @@ const handleGetContactTracerStats = async (req, res) => {
         "SELECT COUNT(*) AS activecases FROM MedicalHistories WHERE recent_test_result = 'positive';",
       );
 
-      const closeContactCount = await pool.query(
+      const closeContactCount = await pooldb2.query(
         "select COUNT(*) AS closecases from tracingrecords tr left join tracingrecords tr2 on tr.location = tr2.location and tr.tokenid <> tr2.tokenid where tr2.time - tr.time < interval '30 seconds' and tr2.time - tr.time > interval '0 seconds';",
       );
       
@@ -32,8 +32,8 @@ const handleGetContactTracerStats = async (req, res) => {
       res.json({
         status_code: 0,
         statistics: {
-          activeCases: caseCount.rows[0].activecases,
-          recoveredCount: closeContactCount.rows[0].closecases,
+          totalCases: caseCount.rows[0].activecases,
+          closeCases: closeContactCount.rows[0].closecases,
         } 
       });
     })
