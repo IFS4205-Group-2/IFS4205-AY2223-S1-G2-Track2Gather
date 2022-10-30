@@ -33,13 +33,13 @@ export default function ContactTracerOverview() {
       <Flex justifyContent={'space-between'}>
         <Box 
           w={'49%'}
-          minHeight={'225px'}
+          minHeight={'500px'}
           borderWidth='1px'
           borderRadius='lg'
           overflow='hidden'
         >
           <Center h='100%' color='red.400'>
-            <Text fontSize='32px' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
+            <Text fontSize='50px' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
               {data.totalCases || '0'}
             </Text>
             <Text fontSize='md' fontWeight={'500'} marginLeft={'20px'} textAlign={'center'}>
@@ -49,13 +49,13 @@ export default function ContactTracerOverview() {
         </Box>
         <Box 
           w={'49%'}
-          minHeight={'225px'}
+          minHeight={'500px'}
           borderWidth='1px'
           borderRadius='lg'
           overflow='hidden'
         >
           <Center h='100%' color='green.400'>
-            <Text fontSize='32px' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
+            <Text fontSize='50px' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
               {data.closeCases || '0'}
             </Text>
             <Text fontSize='md' fontWeight={'500'} marginLeft={'20px'} textAlign={'center'}>
@@ -65,15 +65,7 @@ export default function ContactTracerOverview() {
           
         </Box>
       </Flex>
-      <Box
-        w={'100%'}
-        minHeight='400px'
-        marginTop='10px'
-        borderWidth='1px'
-        borderRadius='lg'
-      >
-      
-      </Box>
+
     </>
   );
 }
