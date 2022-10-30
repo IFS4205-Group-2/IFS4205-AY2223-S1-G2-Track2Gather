@@ -19,7 +19,7 @@ const handleAdminUserInfoUpdate = async (req, res) => {
         const hashedPass = await bcrypt.hash(req.body.password, 10);
         const credentialResult = await pool.query(
           "UPDATE Credentials SET password_hash = $1 WHERE uid = $2;",
-          [hashedPass, body.req.uid]
+          [hashedPass, req.body.uid]
         );
 
         if (credentialResult.rowCount !== 1) {
