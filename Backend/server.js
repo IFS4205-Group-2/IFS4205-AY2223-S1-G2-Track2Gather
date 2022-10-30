@@ -38,7 +38,6 @@ app.set("trust proxy", 1); //???
 io.use(authorizeUser); //???
 
 io.on("connect", socket => {
-  //initializeUser(socket);
 });
 
 server.listen(4000, () => {

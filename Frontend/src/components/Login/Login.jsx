@@ -23,7 +23,7 @@ const Login = () => {
           password: Yup.string()
             .required("Password required!")
             .min(6, "Password too short!"),
-        })}
+        })} 
       
         onSubmit={(values, actions) => {
           const vals = { ...values };

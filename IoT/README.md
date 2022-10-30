@@ -159,52 +159,69 @@ I am a test for sanity purposes.
 > The port 4205 is only accessible with SoC vpn, or NUS network.
 > For more information, refer to the Final Report, section "6.9. Utility Service for PenTesting/Functional Testing".
 
-After setting up the server, you can begin to configure the Dongles and Receivers.
+We have provided two ways for you to test the Dongles and Receivers. For both steps, make sure you are connected to the NUS VPN and that it is whitelisted as above.
 
-In this project, Receivers are simulated by Virtual Machines.
-Each Receiver is assumed to be Bluetooth enabled, and has the repository cloned in the directory (`~/` or your home directory).
-In this directory, the file `config.py` as shown should be replaced with a registered sftp user and password:
-```
-sftp_user="REDACTED"
-sftp_password="REDACTED"
-```
+1. Via setting up your own Receiver using the public repo
+2. Via the Virtual Machine provided 
+
+### Setting up your own Receiver using the public repo
+
+In this version, you will only need an account with root privileges. However, you will need the following conditions met as well.
+
+Each Receiver is assumed to be Bluetooth enabled, with `Python 3.8.10` installed, and has the repository cloned in the directory (`~/` or your home directory).
+In this `IoTRecv` directory, the fields of the file `config.py` are redacted. Instead, you should replace this file with a `config.py` that we have provided which contain registered SFTP credentials.
 For these SFTP credentials, each Virtual Machine is assumed to have the IoT Server's ECDSA key fingerprint added to the list of known hosts.
 
-On top of that, there should a designated Receiver (* *Setup Recv* *). * *Setup Recv* * acts as a normal Receiver but it will also contain the software needed to setup the IoT Dongles.
-Thus, * *Setup Recv* * is assumed to have an Arduino IDE installed that is configured to run RFDuino boards, and that it has these libraries installed: (Crypto, micro-ecc).
+On top of that, there should a designated Receiver (*Setup Recv*). *Setup Recv* acts as a normal Receiver but it will also contain the software needed to setup the IoT Dongles.
+Thus, *Setup Recv* is assumed to have an Arduino IDE installed that is configured to run RFDuino boards, and that it has these libraries installed: (Crypto, micro-ecc).
 
-To start the setup process for normal Receivers, you can run the following commands and you'll be prompted for the credentials:
+The files you will be using to set up will be `config.py`, `setup.sh`, `sync.py`, `IoTRecv.py` and `bootstrap.py`.
+These are the steps to set up the Receiver:
+
+In your home directory, change your directory by running `cd IFS4205-AY2223-S1-G2-Track2Gather/main/IoT/IoTRecv`.
+
+Next, for normal Receivers, you can run the following commands:
 ```
 chmod +x setup.sh
 ./setup.sh
-[sudo] password for healthauth:
 ```
 
-For * *Setup Recv* *, you should run the following commands instead:
+For *Setup Recv*, you should run the following commands instead:
 ```
 chmod +x setup.sh
 ./setup.sh all
-[sudo] password for healthauth:
 ```
 
 `setup.sh` performs the following operations:
 > 1. Installs all tools that does not require manual configuration (python3-pip)
-> 2. Copies `../GMS/gmsservice.py` to the directory (`~/.local/lib/python3.8/site-packages/adafruit_ble/services/`)
-> 3. Installs all Python Libraries and Packages as indicated in `requirements.txt`
-> 4. Hardens the security by only allowing packets to and from the IoT Server
+> 2. Installs all Python Libraries and Packages as indicated in `requirements.txt`
+> 3. Copies `../GMS/gmsservice.py` to the directory (`~/.local/lib/python3.8/site-packages/adafruit_ble/services/`)
+> 4. Hardens the security by restricting the iptables
 > 5. Initiates the bootstrap process by running `python3 bootstrap.py`
 
-For * *Setup Recv* *, by running `./setup.sh all`, it will additionally perform the following operations:
+For *Setup Recv*, by running `./setup.sh all`, it will additionally perform the following operations:
 > 6. Displays the default keys to be uploaded to the IoT Dongle by running `python3 bootstrap.py --all` instead
 > 7. Syncs up any generated keys with the IoT Server by running `python3 sync.py` after you have completed uploading the sketches to the IoT Dongles
 
+As the IoT Dongle have already been configured, there is no need to upload the sketch again.
 
 > 📔 <span style="color:#3333ff">**NOTE:**</span>
 >
-> 1. Depending on the connectivity of the Bluetooth on the IoT Dongles and * *Setup Recv* *, `sync.py` might need to be run a few times to ensure that all keys are synced.
+> 1. Depending on the connectivity of the Bluetooth on the IoT Dongles and *Setup Recv*, `sync.py` might need to be run a few times to ensure that all keys are synced.
 > 2. The battery of the Dongle might run out. If that is the case, `sync.py` has to be run again as a new IoT Dongle keypair will be generated once the IoT Dongle charges.
 
-Once the setup is done for every Receiver, you can start the Receiver by manually running `python3 IoTRecv.py`.
+Once the setup is done for every Receiver, you can start the Receiver by manually running `python3 IoTRecv.py &`.
+
+### Setting up with the provided VM
+
+By using the VM, the setup of the Receiver has already been configured. Simply login to `Health Authorities` with the credentials provided to continue with the testing.
+
+> 📔 <span style="color:#3333ff">**NOTE:**</span>
+>
+> The VM is tested on VMWare Workstation 16 Player and Pro. If possible, do continue to use the same setup.
+> The `Health Authorities` account is operated with least privileges and is unable to run any `sudo` commands.
+
+To start the Receiver, ensure that the Bluetooth in the VM is enabled. Next, `cd IFS4205-AY2223-S1-G2-Track2Gather/main/IoT/IoTRecv` and run `python3 sync.py` to ensure that the keys are synced before running `python3 IoTRecv.py &`.
 
 ## Sample Output when setting up the IoT Dongles and Receivers
 
@@ -236,12 +253,26 @@ Generating Directories...
 /home/healthauth/IFS4205-AY2223-S1-Team02-Track2Gather/src/Track2Gather-WebApp/IoT/IoTRecv/../IoT Server/Receiver/ already exists.
 Scanning for 30 seconds...
 {MAC ADDRESS 1}
-Saved as PEM file in /home/healthauth/IFS4205-AY2223-S1-Team02-Track2Gather/src/Track2Gather-WebApp/IoT/IoTRecv/DongleKeys/
 Sent to IoT Server
 {MAC ADDRESS 2} was not found in the scan. If this mac address is to be synced, please try again.
 Finished retrieving IoT Dongle's public key.
 ...................................................................
 ```
+So, if {MAC ADDRESS 2} is intended to be synced, you should run `python3 sync.py` again.
+
+## Troubleshooting for IoT Dongle and Receiver
+
+1. IoT Dongle seems to have died or not responding.
+Solution: Connect the Dongle to the Arduino IDE and open the serial monitor. This will restart the Dongle. Run `python3 sync.py` on the *Setup Recv* to sync with the server. Try to keep the Dongle connected to a power source at all times.
+
+2. `python3 sync.py` cannot sense the Dongles even when in range. 
+Solution: This can be due to the Bluetooth connection in the Receiver. You can try to restart the Receiver and the script should work.
+
+3. The receiver seems to be down, i.e it does not connect to the Dongle or Server
+Solution: Double-check your VPN connection, check if the Bluetooth is still functional and that the Dongles are still visible via Bluetooth. Restart the receiver if necessary.
+
+4. Running `python3 sync.py` raises FileNotFoundError when verifying signatures. 
+Solution: `sync.py` can only be run in *Setup Recv*, which has ran `python3 bootstrap.py --all`. To do so, either run that command, or `./setup.sh all`.
 
 ## Unit Testing
 
