@@ -58,10 +58,12 @@ const handleAddUser = async (req, res) => {
       }
       
       res.json({ status_code: -1 });
+      res.send();
     })
     .catch((err) => {
       console.log(err);
       res.json({ status_code: -1 });
+      res.send();
     });
 };
 
