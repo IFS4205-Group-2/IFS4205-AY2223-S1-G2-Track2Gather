@@ -35,8 +35,8 @@ export default function UserInformation() {
     fetchData();
   }, [token]);
 
-  const handleOnUpdate = (index) => {
-    setSelectedUser(index);
+  const handleOnUpdate = (uid) => {
+    setSelectedUser(originalDataRef.current.find(row => row.uid === uid));
     onOpenUpdateDialog();
   }
 
@@ -113,7 +113,7 @@ export default function UserInformation() {
                     <Td>{info.vaccination_history || 'No history'}</Td>
                     <Td>{info.recent_test_result || 'No results'}</Td>
                     <Td>
-                      <Button colorScheme="teal" type="button" onClick={() => handleOnUpdate(index)} marginLeft={'5px'}>Update</Button>
+                      <Button colorScheme="teal" type="button" onClick={() => handleOnUpdate(info.uid)} marginLeft={'5px'}>Update</Button>
                     </Td>
                   </Tr>
                 )
@@ -136,17 +136,17 @@ export default function UserInformation() {
               <ModalBody>
                 <Formik
                   initialValues={{ 
-                    name: originalDataRef.current[selectedUser].name,
-                    username: originalDataRef.current[selectedUser].username,
-                    nric: originalDataRef.current[selectedUser].nric,
-                    address: originalDataRef.current[selectedUser].address,
-                    phoneno: originalDataRef.current[selectedUser].contact_no,
-                    email: originalDataRef.current[selectedUser].email,
+                    name: selectedUser.name,
+                    username: selectedUser.username,
+                    nric: selectedUser.nric,
+                    address: selectedUser.address,
+                    phoneno: selectedUser.contact_no,
+                    email: selectedUser.email,
                     password: "",
-                    gender: originalDataRef.current[selectedUser].gender,
-                    role: originalDataRef.current[selectedUser].rid,
-                    vaccinationhistory: originalDataRef.current[selectedUser].vaccination_history,
-                    testresult: originalDataRef.current[selectedUser].recent_test_result,
+                    gender: selectedUser.gender,
+                    role: selectedUser.rid,
+                    vaccinationhistory: selectedUser.vaccination_history,
+                    testresult: selectedUser.recent_test_result,
                   }}
                   validationSchema={Yup.object({
                     name: Yup.string()
