@@ -12,7 +12,7 @@ export default function PersonalInfoForm() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch('http://172.25.76.159:4000/user/info', {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/user/info', {
           credentials: "include",
           headers: {
             authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ export default function PersonalInfoForm() {
       onSubmit={(values, actions) => {
         const vals = { ...values };
         actions.resetForm();
-        fetch("http://172.25.76.159:4000/user/update", {
+        fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/user/update", {
           method: "POST",
           credentials: "include",
           headers: {

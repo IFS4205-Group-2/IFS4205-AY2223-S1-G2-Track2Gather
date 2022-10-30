@@ -16,7 +16,7 @@ export default function TokenManagement() {
   useState(() => {
     async function fetchData() {
       try {
-        const res = await fetch('http://172.25.76.159:4000/token/info', {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/token/info', {
           credentials: "include",
           headers: {
             authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ export default function TokenManagement() {
   }
 
   const handleOnDeleteConfirmation = () => {
-    fetch("http://172.25.76.159:4000/token/delete", {
+    fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/token/delete", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -197,7 +197,7 @@ export default function TokenManagement() {
               onSubmit={(values, actions) => {
                 const vals = { ...values };
                 actions.resetForm();
-                fetch("http://172.25.76.159:4000/token/add", {
+                fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/token/add", {
                   method: "POST",
                   credentials: "include",
                   headers: {
