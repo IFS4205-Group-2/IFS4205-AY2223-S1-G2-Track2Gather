@@ -27,7 +27,7 @@ export default function ContactTracerOverview() {
     }
     fetchData();
   }, [token]);
-
+  console.log(data);
   const elements = [
     { data: { id: 'one', label: 'Alice' } },
     { data: { id: 'two', label: 'Bernard' } },
