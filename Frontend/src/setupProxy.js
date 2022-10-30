@@ -2,49 +2,49 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
   app.use(
-    '/auth',
+    '/auth/',
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
     })
   );
   app.use(
-    '/tracing',
+    '/tracing/',
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
     })
   );
   app.use(
-    '/researcher',
+    '/researcher/',
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
     })
   );
   app.use(
-    '/user',
+    '/user/',
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
     })
   );
   app.use(
-    '/medical',
+    '/medical/',
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
     })
   );
   app.use(
-    '/token',
+    '/token/',
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
     })
   );
   app.use(
-    '/stats',
+    '/stats/',
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
