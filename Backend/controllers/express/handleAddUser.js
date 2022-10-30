@@ -52,7 +52,17 @@ const handleAddUser = async (req, res) => {
         ipaddress: ip
       });
 
-      if (userResult.rowCount === 1) {
+      if (userResult.rowCount !== 1) {
+        res.json({ status_code: -1 });
+        return;
+      }
+
+      const medicalResult = await pool.query(
+        "INSERT INTO MedicalHistories (uid, vaccination_history, recent_test_result) VALUES ($1, $2, $3);",
+        [userId, null, 'No test results']
+      );
+
+      if (medicalResult.rowCount === 1) {
         res.json({ status_code: 0 });
         return;
       }
