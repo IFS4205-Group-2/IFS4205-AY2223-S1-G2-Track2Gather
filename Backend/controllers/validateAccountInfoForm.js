@@ -31,10 +31,7 @@ const formSchema = Yup.object({
   password: Yup.string()
     .required("Password required!")
     .min(12, "Password too short!")
-    .matches(/[A-Z]/, "Your password must contain at least one uppercase character.")
-    .matches(/[a-z]/, "Your password must contain at least one lowercase character.")
-    .matches(/[\d]/, "Your password must contain at least one digit.")
-    .matches(/[$-/:-?{-~!"^_`[\]#]/, "Your password must contain at least one special character.")
+    .matches(/^(?=.*[0-9])(?=.*[- ?!@#$%^&*\/\\])(?=.*[A-Z])(?=.*[a-z])[a-zA-Z0-9- ?!@#$%^&*\/\\]{12,}$/, "Your password must contain at least one uppercase character, one lowercase character, one digit and one special character."),
 });
 
 const validateAccountInfoForm = (req, res, next) => {

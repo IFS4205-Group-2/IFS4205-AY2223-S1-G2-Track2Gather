@@ -27,15 +27,8 @@ const formSchema = Yup.object({
   testresult: Yup.string()
     .required("Test result required!")
     .matches(/^positive|negative|No test results$/, "Please ensure that the chosen test result is valid!"),
-});
-
-const passwordSchema = Yup.object({
   password: Yup.string()
-    .min(12, "Password too short!")
-    .matches(/[A-Z]/, "Your password must contain at least one uppercase character.")
-    .matches(/[a-z]/, "Your password must contain at least one lowercase character.")
-    .matches(/[\d]/, "Your password must contain at least one digit.")
-    .matches(/[$-/:-?{-~!"^_`[\]#]/, "Your password must contain at least one special character."),
+    .matches(/^$|^(?=.*[0-9])(?=.*[- ?!@#$%^&*\/\\])(?=.*[A-Z])(?=.*[a-z])[a-zA-Z0-9- ?!@#$%^&*\/\\]{12,}$/, "Your password must contain at least one uppercase character, one lowercase character, one digit and one special character."),
 });
 
 const validateAdminUpdateUserInfoForm = (req, res, next) => {
@@ -47,19 +40,6 @@ const validateAdminUpdateUserInfoForm = (req, res, next) => {
     })
     .then(valid => {
       if (valid) {
-        if (formData.password !== "") {
-          passwordSchema
-            .validate(formData.password)
-            .catch((err) => {
-              console.log(err);
-              res.status(422).send();
-            })
-            .then(validPassword => {
-              if (!validPassword) {
-                res.status(422).send();
-              }
-            })
-        }
         next();
       } else {
         res.status(422).send();

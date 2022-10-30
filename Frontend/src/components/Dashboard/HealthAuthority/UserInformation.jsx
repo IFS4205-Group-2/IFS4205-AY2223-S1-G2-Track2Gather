@@ -169,10 +169,7 @@ export default function UserInformation() {
                       .matches(/^Male|Female$/, "Please ensure that the chosen gender is valid!"),
                     password: Yup.string()
                       .min(12, "Password too short!")
-                      .matches(/[A-Z]/, "Your password must contain at least one uppercase character.")
-                      .matches(/[a-z]/, "Your password must contain at least one lowercase character.")
-                      .matches(/[\d]/, "Your password must contain at least one digit.")
-                      .matches(/[$-/:-?{-~!"^_`[\]#]/, "Your password must contain at least one special character."),
+                      .matches(/^(?=.*[0-9])(?=.*[- ?!@#$%^&*\/\\])(?=.*[A-Z])(?=.*[a-z])[a-zA-Z0-9- ?!@#$%^&*\/\\]{12,}$/, "Your password must contain at least one uppercase character, one lowercase character, one digit and one special character."),
                     vaccinationhistory: Yup.string()
                       .matches(/^[A-Za-z\d\-+=!@#$()/|[\]{},.\s]{0,}$/, "Your input contains illegal characters!"),
                     testresult: Yup.string()
