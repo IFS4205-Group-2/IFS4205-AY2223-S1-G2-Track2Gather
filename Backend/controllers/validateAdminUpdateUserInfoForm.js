@@ -51,10 +51,11 @@ const validateAdminUpdateUserInfoForm = (req, res, next) => {
           passwordSchema
             .validate(formData.password)
             .catch((err) => {
+              console.log(err);
               res.status(422).send();
             })
-            .then(valid => {
-              if (!valid) {
+            .then(validPassword => {
+              if (!validPassword) {
                 res.status(422).send();
               }
             })

@@ -39,6 +39,8 @@ const handleAdminUserInfoUpdate = async (req, res) => {
       logtail.info(`Health Authority ${decoded.username} updated a user information.`, {
         ipaddress: ip
       });
+
+      res.send();
     })
     .catch((e) => {
       res.status(400);
