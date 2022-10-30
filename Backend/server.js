@@ -1,6 +1,5 @@
 const express = require("express");
 const { corsConfig } = require("./controllers/serverController");
-const { Server } = require("socket.io");
 const app = express();
 const helmet = require("helmet");
 const cors = require("cors");
@@ -12,15 +11,9 @@ const userRouter = require('./routers/userRouter');
 const medicalRouter = require('./routers/medicalRouter');
 const tokenRouter = require('./routers/tokenRouter');
 const statsRouter = require('./routers/statsRouter');
-const pool = require("./db");
 const redisClient = require("./redis");
 const server = require("http").createServer(app);
-const authorizeUser = require("./controllers/authorizeUser");
-// const initializeUser = require("./controllers/initializeUser");
 
-const io = new Server(server, {
-  cors: corsConfig,
-});
 
 app.use(helmet());
 app.use(cors(corsConfig));
@@ -33,12 +26,8 @@ app.use('/user', userRouter);
 app.use('/medical', medicalRouter);
 app.use('/token', tokenRouter);
 app.use('/stats', statsRouter);
-app.set("trust proxy", 1); //???
+app.set("trust proxy", 1);
 
-io.use(authorizeUser); //???
-
-io.on("connect", socket => {
-});
 
 server.listen(4000, () => {
   console.log("Server listening on port 4000");
@@ -51,6 +40,5 @@ setInterval(() => {
   if (process.env.NODE_ENV !== "production") {
     return;
   }
-  pool.query("DELETE FROM users u where u.username != $1", ["lester"]);
   redisClient.flushall();
 }, resetEverythingInterval);

@@ -38,7 +38,7 @@ const attemptLogin = async (req, res) => {
         .catch(err => {
           console.log(err);
           res.json({ loggedIn: false, status: "Try again later" });
-        });
+        }); 
     } else {
       res.json({ loggedIn: false, status: "Wrong username or password!" });
     }
