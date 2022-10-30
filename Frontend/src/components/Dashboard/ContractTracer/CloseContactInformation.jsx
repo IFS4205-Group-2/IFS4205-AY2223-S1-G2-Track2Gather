@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 
 export default function CloseContactInformation() {
   const { data: contacts, isSuccess } = useQuery(["contacts"], async () => {
-    const res = await fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/tracing/contacts");
+    const res = await fetch("http://172.25.76.159:4000/tracing/contacts");
     const data = await res.json();
     return data;
   });
@@ -64,7 +64,7 @@ export default function CloseContactInformation() {
         item.email.indexOf(e) >=0 ||
         item.contact_no.toString().indexOf(e) >=0 ||
         item.gender.indexOf(e) >=0 ||
-        item?.tid?.toString().indexOf(e) >=0  ||
+        item?.tid?.indexOf(e) >=0  ||
         item.zipcode.toString().indexOf(e) >=0 
         )
         return true;
