@@ -1,6 +1,6 @@
-import { Box, Center, CircularProgress, CircularProgressLabel, Flex, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import CytoscapeComponent from 'react-cytoscapejs';
+
 
 export default function ContactTracerOverview() {
   const [data, setData] = useState({});
