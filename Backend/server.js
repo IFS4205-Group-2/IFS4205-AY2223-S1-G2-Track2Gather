@@ -19,7 +19,7 @@ app.use(helmet());
 app.use(cors(corsConfig));
 app.use(express.json());
 app.use("/auth", authRouter);
-app.use("/tracing", recordRouter);
+app.use("/contacttracer", recordRouter);
 app.use("/tracing", contactRouter);
 app.use("/researcher", researchRouter);
 app.use('/user', userRouter);
