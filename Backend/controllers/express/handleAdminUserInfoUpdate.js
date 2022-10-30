@@ -21,22 +21,12 @@ const handleAdminUserInfoUpdate = async (req, res) => {
           "UPDATE Credentials SET password_hash = $1 WHERE uid = $2;",
           [hashedPass, req.body.uid]
         );
-
-        if (credentialResult.rowCount !== 1) {
-          res.json({ status_code: -1, status_message: 'Failed to update user credentials.' });
-          return;
-        }
       }
 
       const userResult = await pool.query(
         "UPDATE Users SET name = $2, contact_no = $3, email = $4, address = $5, gender = $6, rid = $7 WHERE uid = $1;",
         [req.body.uid, req.body.name, req.body.phoneno, req.body.email, req.body.address, req.body.gender, req.body.role]
       );
-
-      if (userResult.rowCount !== 1) {
-        res.json({ status_code: -1, status_message: 'Failed to update user information.' });
-        return;
-      }
 
       const latestTestResult = req.body.testresult.length > 8 ? null : req.body.testresult;
 
@@ -45,21 +35,12 @@ const handleAdminUserInfoUpdate = async (req, res) => {
         [req.body.uid, req.body.vaccinationhistory, latestTestResult]
       );
 
-      if (medicalResult.rowCount !== 1) {
-        res.json({ status_code: -1, status_message: 'Failed to update user medical history.' });
-        return;
-      }
-
       const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
       logtail.info(`Health Authority ${decoded.username} updated a user information.`, {
         ipaddress: ip
       });
-
-      res.status(200);
-      res.json({ status: 'Update success!' });
     })
     .catch((e) => {
-      console.log(e);
       res.status(400);
       res.json({ status: 'Update user information failed. Try again later.' });
     });
