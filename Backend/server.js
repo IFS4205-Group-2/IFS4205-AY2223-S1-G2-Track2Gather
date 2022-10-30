@@ -8,6 +8,10 @@ const authRouter = require("./routers/authRouter");
 const recordRouter = require("./routers/recordRouter");
 const contactRouter = require("./routers/contactRouter");
 const researchRouter = require("./routers/researchRouter");
+const userRouter = require('./routers/userRouter');
+const medicalRouter = require('./routers/medicalRouter');
+const tokenRouter = require('./routers/tokenRouter');
+const statsRouter = require('./routers/statsRouter');
 const pool = require("./db");
 const redisClient = require("./redis");
 const server = require("http").createServer(app);
@@ -25,6 +29,10 @@ app.use("/auth", authRouter);
 app.use("/tracing", recordRouter);
 app.use("/tracing", contactRouter);
 app.use("/researcher", researchRouter);
+app.use('/user', userRouter);
+app.use('/medical', medicalRouter);
+app.use('/token', tokenRouter);
+app.use('/stats', statsRouter);
 app.set("trust proxy", 1); //???
 
 io.use(authorizeUser); //???

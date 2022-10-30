@@ -17,6 +17,12 @@ const jwtVerify = (token, secret) =>
     });
   });
 
-const getJwt = req => req.headers["authorization"].split(" ")[1];
+const getJwt = req => {
+  try {
+    return req.headers["authorization"].split(" ")[1];
+  } catch {
+    return null;
+  }
+};
 
 module.exports = { jwtSign, jwtVerify, getJwt };
