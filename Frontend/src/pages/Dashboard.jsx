@@ -12,7 +12,7 @@ export default function Dashboard() {
   useState(() => {
     async function fetchData() {
       try {
-        const res = await fetch('http://172.25.76.159:4000/user/role', {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/user/role', {
           credentials: "include",
           headers: {
             authorization: `Bearer ${token}`,

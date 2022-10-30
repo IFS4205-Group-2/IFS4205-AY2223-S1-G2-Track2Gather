@@ -11,7 +11,7 @@ export default function ARTResult() {
   useState(() => {
     async function fetchData() {
       try {
-        const res = await fetch('http://172.25.76.159:4000/medical/info', {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/medical/info', {
           credentials: "include",
           headers: {
             authorization: `Bearer ${token}`,
@@ -74,7 +74,7 @@ export default function ARTResult() {
               onSubmit={(values, actions) => {
                 const vals = { ...values };
                 actions.resetForm();
-                fetch("http://172.25.76.159:4000/medical/update", {
+                fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/medical/update", {
                   method: "POST",
                   credentials: "include",
                   headers: {

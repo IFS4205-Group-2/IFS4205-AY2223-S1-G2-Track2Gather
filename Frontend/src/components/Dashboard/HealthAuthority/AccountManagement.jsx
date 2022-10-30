@@ -16,7 +16,7 @@ export default function AccountManagement() {
   useState(() => {
     async function fetchData() {
       try {
-        const res = await fetch('http://172.25.76.159:4000/user/infos', {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/user/infos', {
           credentials: "include",
           headers: {
             authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ export default function AccountManagement() {
   }
 
   const handleOnDeleteConfirmation = () => {
-    fetch("http://172.25.76.159:4000/user/delete", {
+    fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/user/delete", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -229,7 +229,7 @@ export default function AccountManagement() {
               onSubmit={(values, actions) => {
                 const vals = { ...values };
                 actions.resetForm();
-                fetch("http://172.25.76.159:4000/user/add", {
+                fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/user/add", {
                   method: "POST",
                   credentials: "include",
                   headers: {

@@ -9,7 +9,7 @@ export default function HealthAuthorityOverview() {
   useState(() => {
     async function fetchData() {
       try {
-        const res = await fetch('http://172.25.76.159:4000/stats/healthauthority', {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/stats/healthauthority', {
           credentials: "include",
           headers: {
             authorization: `Bearer ${token}`,
