@@ -8,7 +8,7 @@ const handleLogin = async (req, res) => {
 
   const token = getJwt(req);
 
-  if (!token) {
+  if (!token || token == null) {
     res.json({ loggedIn: false });
     return;
   }
@@ -16,8 +16,8 @@ const handleLogin = async (req, res) => {
   jwtVerify(token, process.env.JWT_SECRET)
     .then(async decoded => {
       const potentialUser = await pool.query(
-        "SELECT username FROM credentials c WHERE c.username = $1",
-        [decoded.username]
+        "SELECT username FROM credentials WHERE uid = $1",
+        [decoded.userid]
       );
 
       if (potentialUser.rowCount === 0) {

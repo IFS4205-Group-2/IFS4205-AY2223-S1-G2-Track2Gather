@@ -1,5 +1,5 @@
 export const USER_ROLES = {
-  user: 'user',
-  contactTracer: 'contactTracer',
-  healthAuthority: 'healthAuthority',
+  user: 3,
+  contactTracer: 2,
+  healthAuthority: 1,
 }

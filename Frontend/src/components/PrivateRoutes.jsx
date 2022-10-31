@@ -1,16 +1,16 @@
 import { useContext } from "react";
 import { AccountContext } from "./AccountContext";
 
-const { Outlet, Navigate } = require("react-router");
+const { Navigate } = require("react-router");
 
 const useAuth = () => {
   const { user } = useContext(AccountContext);
   return user && user.loggedIn;
 };
 
-const PrivateRoutes = () => {
+const PrivateRoutes = ({ children }) => {
   const isAuth = useAuth();
-  return isAuth ? <Outlet /> : <Navigate to="/" />;
+  return isAuth ? children : <Navigate replace to="/login" />;
 };
 
 export default PrivateRoutes;

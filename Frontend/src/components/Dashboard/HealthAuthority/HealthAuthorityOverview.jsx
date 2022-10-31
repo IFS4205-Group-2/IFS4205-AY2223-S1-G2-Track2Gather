@@ -1,7 +1,32 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
+import { useState } from "react";
 import CytoscapeComponent from 'react-cytoscapejs';
 
 export default function HealthAuthorityOverview() {
+  const [data, setData] = useState({});
+  const token = localStorage.getItem("token");
+
+  useState(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/stats/healthauthority', {
+          credentials: "include",
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+        const { status_code, statistics } = await res.json();
+        if (status_code === 0) {
+          setData(statistics);
+          return;
+        }
+      } catch(e) {
+        console.log(e);
+        return;
+      }
+    }
+    fetchData();
+  }, [token]);
   
   const elements = [
     { data: { id: 'one', label: 'Alice' } },
@@ -20,7 +45,7 @@ export default function HealthAuthorityOverview() {
     <>
       <Flex justifyContent={'space-between'}>
         <Box 
-          w={'49.5%'}
+          w={'32%'}
           minHeight={'225px'}
           borderWidth='1px'
           borderRadius='lg'
@@ -28,15 +53,15 @@ export default function HealthAuthorityOverview() {
         >
           <Center h='100%' color='red.400'>
             <Text fontSize='32px' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
-              12432
+              {data.activeCases || '0'}
             </Text>
             <Text fontSize='md' fontWeight={'500'} marginLeft={'20px'} textAlign={'center'}>
-              Positive Cases Today
+              Current Active Cases
             </Text>
           </Center>
         </Box>
         <Box 
-          w={'49.5%'}
+          w={'32%'}
           minHeight={'225px'}
           borderWidth='1px'
           borderRadius='lg'
@@ -44,34 +69,15 @@ export default function HealthAuthorityOverview() {
         >
           <Center h='100%' color='green.400'>
             <Text fontSize='32px' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
-              9835
+              {data.recoveredCount || '0'}
             </Text>
             <Text fontSize='md' fontWeight={'500'} marginLeft={'20px'} textAlign={'center'}>
-              Recovered Today
-            </Text>
-          </Center>
-          
-        </Box>
-      </Flex>
-      <Flex justifyContent={'space-between'} marginTop={'15px'}>
-        <Box 
-          w={'49.5%'}
-          minHeight={'225px'}
-          borderWidth='1px'
-          borderRadius='lg'
-          overflow='hidden'
-        >
-          <Center h='100%' color='yellow.400'>
-            <Text fontSize='32px' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
-              26453
-            </Text>
-            <Text fontSize='md' fontWeight={'500'} marginLeft={'20px'} textAlign={'center'}>
-              In Quatantine
+              Total Recovery
             </Text>
           </Center>
         </Box>
         <Box 
-          w={'49.5%'}
+          w={'32%'}
           minHeight={'225px'}
           borderWidth='1px'
           borderRadius='lg'
@@ -79,7 +85,7 @@ export default function HealthAuthorityOverview() {
         >
           <Center h='100%' color='blue.400'>
             <Text fontSize='32px' fontWeight={'700'} marginLeft={'20px'} textAlign={'center'}>
-              2917291
+              {data.tokensIssued || '0'}
             </Text>
             <Text fontSize='md' fontWeight={'500'} marginLeft={'20px'} textAlign={'center'}>
               Tokens Issued

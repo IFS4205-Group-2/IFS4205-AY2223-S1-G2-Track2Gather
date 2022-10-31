@@ -4,50 +4,63 @@ import { useState, useRef } from "react";
 import * as Yup from "yup";
 import TextField from "../../TextField";
 
-const fetchedData = [
-  {
-    'nric': 'SXXXX123D',
-    'name': 'Tan Boon Huat',
-    'tokenID': 'T12345',
-    'assignedDate': '2020/07/05'
-  },
-  {
-    'nric': 'TXXXX221X',
-    'name': 'Lim Kai Heng',
-    'tokenID': 'T12346',
-    'assignedDate': '2020/07/08'
-  },
-  {
-    'nric': 'TXXXX999D',
-    'name': 'Chua Chin Chan',
-    'tokenID': 'T12348',
-    'assignedDate': '2020/07/09'
-  },
-  {
-    'nric': 'SXXXX456A',
-    'name': 'Loh Kean Ming',
-    'tokenID': 'T12350',
-    'assignedDate': '2020/07/10'
-  }
-]
-
 export default function TokenManagement() {
   const { isOpen: showDeleteDialog, onOpen: onOpenDeleteDialog, onClose: onCloseDeleteDialog } = useDisclosure();
   const { isOpen: showAddDialog, onOpen: onOpenAddDialog, onClose: onCloseAddDialog } = useDisclosure();
   const [selectedUser, setSelectedUser] = useState('');
   const cancelRef = useRef();
-  const [data, setData] = useState(fetchedData || []);
+  let originalDataRef = useRef([]);
+  const [data, setData] = useState([]);
+  const token = localStorage.getItem("token");
 
-  const handleOnDelete = (nric) => {
-    setSelectedUser(nric);
+  useState(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/token/info', {
+          credentials: "include",
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+        const { status_code, tokenInfos } = await res.json();
+        if (status_code === 0) {
+          originalDataRef.current = tokenInfos;
+          setData(tokenInfos);
+          return;
+        }
+      } catch(e) {
+        console.log(e);
+        return;
+      }
+    }
+    fetchData();
+  }, [token]);
+
+  const handleOnDelete = (uid) => {
+    setSelectedUser(uid);
     onOpenDeleteDialog();
   }
 
   const handleOnDeleteConfirmation = () => {
-    // Post delete result to backend
-    console.log(selectedUser);
-    onCloseDeleteDialog();
-    window.location.reload(false);
+    fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/token/delete", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ "uid": selectedUser }),
+    })
+    .catch(err => {
+      console.log(err);
+      return;
+    })
+    .then(res => {
+      return;
+    })
+    .finally(() => {
+      window.location.reload();
+    })
   }
 
   const handleOnAdd = () => {
@@ -55,11 +68,11 @@ export default function TokenManagement() {
   }
 
   const filterData = (target) => {
-    const filteredData = data.filter(row => row.nric.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+    const filteredData = originalDataRef.current.filter(row => row.nric.toLocaleLowerCase().includes(target.toLocaleLowerCase())
       || row.name.toLocaleLowerCase().includes(target.toLocaleLowerCase())
-      || row.tokenID.toLocaleLowerCase().includes(target.toLocaleLowerCase()));
+      || row.tid.toLocaleLowerCase().includes(target.toLocaleLowerCase()));
     if (filteredData.length === 0 || target === '') {
-      setData(fetchedData);
+      setData(originalDataRef.current);
       return;
     }
     setData(filteredData);
@@ -91,12 +104,12 @@ export default function TokenManagement() {
           }}
         />
       </div>
+      <ButtonGroup pt="1rem" m={"0 0 10px 0"} w={"100%"} justifyContent={"right"}>
+        <Button colorScheme="teal" type="button" onClick={handleOnAdd}>
+          Add Token
+        </Button>
+      </ButtonGroup>
       <TableContainer>
-        <ButtonGroup pt="1rem" m={"0 0 10px 0"} w={"100%"} justifyContent={"right"}>
-          <Button colorScheme="teal" type="button" onClick={handleOnAdd}>
-            Add Token
-          </Button>
-        </ButtonGroup>
         <Table variant='simple' colorScheme={'facebook'}>
           <Thead>
             <Tr>
@@ -116,9 +129,9 @@ export default function TokenManagement() {
                     <Td>{index + 1}</Td>
                     <Td>{info.nric}</Td>
                     <Td>{info.name}</Td>
-                    <Td>{info.tokenID}</Td>
-                    <Td>{info.assignedDate}</Td>
-                    <Td><Button colorScheme="red" type="button" onClick={() => handleOnDelete(info.nric)}>Delete</Button></Td>
+                    <Td>{info.tid}</Td>
+                    <Td>{info.assigneddate}</Td>
+                    <Td><Button colorScheme="red" type="button" onClick={() => handleOnDelete(info.uid)}>Delete</Button></Td>
                   </Tr>
                 )
               })
@@ -171,20 +184,25 @@ export default function TokenManagement() {
               validationSchema={Yup.object({
                 nric: Yup.string()
                   .required("NRIC required!")
-                  .length(9, "NRIC length is incorrect!"),
+                  .min(9, "NRIC is too short!")
+                  .max(9, "NRIC is too long!")
+                  .matches(/^[STGF]{1}[\d]{7}[A-Z]{1}$/, "Please ensure that your NRIC is correct!"),
                 tokenID: Yup.string()
                   .required("Token ID required!")
-                  .min(6, "Token ID too short!"),
+                  .min(17, "Token ID too short!")
+                  .max(17, "Token ID too long!")
+                  .matches(/^[\dA-Fa-f]{2}:[\dA-Fa-f]{2}:[\dA-Fa-f]{2}:[\dA-Fa-f]{2}:[\dA-Fa-f]{2}:[\dA-Fa-f]{2}$/, "Please ensure that your token ID is correct!"),
               })}
               
               onSubmit={(values, actions) => {
                 const vals = { ...values };
                 actions.resetForm();
-                fetch("http://localhost:4000/token/add", {
+                fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/token/add", {
                   method: "POST",
                   credentials: "include",
                   headers: {
                     "Content-Type": "application/json",
+                    authorization: `Bearer ${token}`,
                   },
                   body: JSON.stringify(vals),
                 })
@@ -200,6 +218,7 @@ export default function TokenManagement() {
                 .then(data => {
                   if (!data) return;
                 });
+                window.location.reload();
                 }}>
               <VStack
                 as={Form}

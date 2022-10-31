@@ -2,47 +2,85 @@ import { Button, ButtonGroup, Heading, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import TextField from "../../TextField";
 import * as Yup from "yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function PersonalInfoForm() {
   const [showEdit, setShowEdit] = useState(true);
+  const token = localStorage.getItem("token");
+  const [userInfo, setUserInfo] = useState({});
+  
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/user/info', {
+          credentials: "include",
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+        const { status_code, ...data } = await res.json();
+        if (status_code === 0) {
+          setUserInfo(data);
+          return;
+        }
+      } catch(e) {
+        console.log(e);
+        return;
+      }
+    }
+    fetchData();
+  }, [token]);
 
   return (
     <Formik
-      initialValues={{ name: "Lok Ke Wen", nric: "*****563D", address: "50 Tuas Ave 11 #03-38 Tuas Lot S(639107)", phoneno: "87651289", email: "kewen@test.com", password: "heello W0rkd!" }}
+      enableReinitialize
+      initialValues={{ name: userInfo.name, nric: userInfo.nric, address: userInfo.address, zipcode: userInfo.zipcode, phoneno: userInfo.contact_no, email: userInfo.email }}
       validationSchema={Yup.object({
-        username: Yup.string()
-          .required("Username required!")
-          .min(6, "Username too short!"),
-        password: Yup.string()
-          .required("Password required!")
-          .min(12, "Password too short!"),
+        nric: Yup.string()
+          .required("NRIC required!")
+          .min(9, "NRIC is too short!")
+          .max(9, "NRIC is too long!")
+          .matches(/^[*]{5}[\d]{3}[A-Za-z]{1}$/, "Please ensure that your NRIC is correct!"),
+        name: Yup.string()
+          .required("Full name is required!")
+          .matches(/^[A-Za-z\d. -]{1,}$/, "Please ensure that you name is correct!"),
+        address: Yup.string()
+          .required("Address required!")
+          .matches(/^[A-Za-z\d,. \-#()]{1,}$/, "Please ensure that your address is correct!"),
+        zipcode: Yup.string()
+          .required("Postal code required!")
+          .matches(/^[\d]{6}$/, "Please ensure that your postal code is correct!"),
+        phoneno: Yup.string()
+          .required("Phone number required!")
+          .matches(/^[\d]{8}$/, "Please ensure that your phone number is correct!"),
+        email: Yup.string()
+          .required("Email address required!")
+          .matches(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, "Please ensure that your email address is correct!")
       })}
       
       onSubmit={(values, actions) => {
         const vals = { ...values };
         actions.resetForm();
-        fetch("http://localhost:4000/user/update", {
+        fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/user/update", {
           method: "POST",
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(vals),
         })
         .catch(err => {
+          console.log(err);
           return;
         })
         .then(res => {
-          if (!res || !res.ok || res.status >= 400) {
-            return;
-          }
-          return res.json();
+          return;
         })
-        .then(data => {
-          if (!data) return;
-        });
-        }}>
+        .finally(() => {
+          window.location.reload();
+        })
+      }}>
       <VStack
         as={Form}
         w={'100%'}
@@ -62,7 +100,7 @@ export default function PersonalInfoForm() {
           autoComplete="off"
           label="NRIC"
           type="text"
-          disabled={showEdit}
+          disabled={true}
         />
 
         <TextField
@@ -70,6 +108,14 @@ export default function PersonalInfoForm() {
           autoComplete="off"
           label="Home Address"
           type="text"
+          disabled={showEdit}
+        />
+
+        <TextField
+          name="zipcode"
+          autoComplete="off"
+          label="Postal Code"
+          type="number"
           disabled={showEdit}
         />
 
@@ -86,14 +132,6 @@ export default function PersonalInfoForm() {
           autoComplete="off"
           label="Email Address"
           type="email"
-          disabled={showEdit}
-        />
-
-        <TextField
-          name="password"
-          autoComplete="off"
-          label="Password"
-          type="password"
           disabled={showEdit}
         />
 

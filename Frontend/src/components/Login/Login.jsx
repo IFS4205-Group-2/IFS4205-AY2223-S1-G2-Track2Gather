@@ -23,12 +23,12 @@ const Login = () => {
           password: Yup.string()
             .required("Password required!")
             .min(6, "Password too short!"),
-        })}
+        })} 
       
         onSubmit={(values, actions) => {
           const vals = { ...values };
           actions.resetForm();
-          fetch("http://172.25.76.159:4000/auth/login", { //to be changed
+          fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/auth/login", { //to be changed
             method: "POST",
             credentials: "include",
             headers: {
@@ -52,7 +52,7 @@ const Login = () => {
                 setError(data.status);
               } else if (data.loggedIn) {
                 localStorage.setItem("token", data.token);
-                navigate("/home");
+                navigate("/dashboard");
               }
             });
         }}
@@ -87,9 +87,6 @@ const Login = () => {
           <ButtonGroup pt="1rem">
             <Button colorScheme="teal" type="submit">
               Log In
-            </Button>
-            <Button onClick={() => navigate("/register")}>
-              Create Account
             </Button>
           </ButtonGroup>
           <ResearcherCSV />

@@ -8,10 +8,10 @@ const logtail = new Logtail(process.env.LOGTAIL_BACKEND_SOURCE_TOKEN);
 
 const attemptLogin = async (req, res) => {
   const potentialLogin = await pool.query(
-    "SELECT uid, password_hash, username FROM credentials c WHERE c.username=$1",
+    "SELECT c.uid, c.username, c.password_hash, u.rid FROM credentials c, users u WHERE c.uid = u.uid AND c.username = $1;",
     [req.body.username]
   );
-
+ 
   if (potentialLogin.rowCount > 0) {
     const isSamePass = await bcrypt.compare(
       req.body.password,
@@ -25,11 +25,12 @@ const attemptLogin = async (req, res) => {
 
       jwtSign(
         {
-          id: potentialLogin.rows[0].uid,
           username: req.body.username,
+          userid: potentialLogin.rows[0].uid,
+          roleid: potentialLogin.rows[0].rid,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "15mins" } //to be changed
+        { expiresIn: "20mins" }
       )
         .then(token => {
           res.json({ loggedIn: true, token });
@@ -37,10 +38,9 @@ const attemptLogin = async (req, res) => {
         .catch(err => {
           console.log(err);
           res.json({ loggedIn: false, status: "Try again later" });
-        });
+        }); 
     } else {
       res.json({ loggedIn: false, status: "Wrong username or password!" });
-      console.log("wrong pass");
     }
   } else {
     res.json({ loggedIn: false, status: "Wrong username or password!" });
