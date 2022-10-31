@@ -3,6 +3,7 @@ import { CSVLink } from "react-csv";
 
 const headers = [
   { label: "vaccination", key: "vaccination" },
+  { label: "testresult", key: "testresult" },
   { label: "gender", key: "gender" },
   { label: "yearofbirth", key: "yearofbirth" },
   { label: "postal", key: "postal" },
