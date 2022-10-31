@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, FormLabel, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, RadioGroup, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, VStack } from "@chakra-ui/react";
+import { Button, ButtonGroup, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, RadioGroup, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, VStack } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useRef, useState } from "react";
 import * as Yup from "yup";
@@ -88,6 +88,8 @@ export default function UserInformation() {
               <Th>Full Name</Th>
               <Th>Contact Number</Th>
               <Th>Home Address</Th>
+              <Th>Postal Code</Th>
+              <Th>Date of Birth</Th>
               <Th>Email Address</Th>
               <Th>Gender</Th>
               <Th>Role</Th>
@@ -107,6 +109,8 @@ export default function UserInformation() {
                     <Td>{info.name}</Td>
                     <Td>{info.contact_no}</Td>
                     <Td>{info.address}</Td>
+                    <Td>{info.zipcode}</Td>
+                    <Td>{info.date_of_birth}</Td>
                     <Td>{info.email}</Td>
                     <Td>{info.gender}</Td>
                     <Td>{info.role}</Td>
@@ -144,6 +148,7 @@ export default function UserInformation() {
                     email: selectedUser.email,
                     password: "",
                     gender: selectedUser.gender,
+                    zipcode: selectedUser.zipcode,
                     role: selectedUser.rid,
                     vaccinationhistory: selectedUser.vaccination_history,
                     testresult: selectedUser.recent_test_result,
@@ -164,6 +169,9 @@ export default function UserInformation() {
                     role: Yup.string()
                       .required("Role required!")
                       .matches(/^[23]{1}$/, "Please ensure that the chosen role is valid!"),
+                    zipcode: Yup.string()
+                      .required("Postal code required!")
+                      .matches(/^[\d]{6}$/, "Please ensure that your postal code is correct!"),
                     gender: Yup.string()
                       .required("Gender required!")
                       .matches(/^Male|Female$/, "Please ensure that the chosen gender is valid!"),
@@ -257,6 +265,17 @@ export default function UserInformation() {
                       type="email"
                       disabled={showEdit}
                     />
+
+                    <TextField
+                      name="zipcode"
+                      autoComplete="off"
+                      label="Postal Code"
+                      type="number"
+                      disabled={showEdit}
+                    />
+
+                    <FormLabel sx={{ width: "100%" }}>Date of Birth</FormLabel>
+                    <Input size='md' disabled={true} value={selectedUser.date_of_birth || 'No data'} sx={{ marginTop: '8px' }}/>
 
                     <RadioGroup name="gender" w={"100%"}>
                       <FormLabel>Gender</FormLabel>

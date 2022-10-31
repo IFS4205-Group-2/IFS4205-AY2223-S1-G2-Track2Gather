@@ -12,6 +12,9 @@ const formSchema = Yup.object({
   address: Yup.string()
     .required("Address required!")
     .matches(/^[A-Za-z\d,. \-#()]{1,}$/, "Please ensure that your address is correct!"),
+  zipcode: Yup.string()
+    .required("Postal code required!")
+    .matches(/^[\d]{6}$/, "Please ensure that your postal code is correct!"),
   phoneno: Yup.string()
     .required("Phone number required!")
     .matches(/^[\d]{8}$/, "Please ensure that your phone number is correct!"),

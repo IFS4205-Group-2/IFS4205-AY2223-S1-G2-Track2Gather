@@ -34,7 +34,7 @@ export default function PersonalInfoForm() {
   return (
     <Formik
       enableReinitialize
-      initialValues={{ name: userInfo.name, nric: userInfo.nric, address: userInfo.address, phoneno: userInfo.contact_no, email: userInfo.email }}
+      initialValues={{ name: userInfo.name, nric: userInfo.nric, address: userInfo.address, zipcode: userInfo.zipcode, phoneno: userInfo.contact_no, email: userInfo.email }}
       validationSchema={Yup.object({
         nric: Yup.string()
           .required("NRIC required!")
@@ -47,6 +47,9 @@ export default function PersonalInfoForm() {
         address: Yup.string()
           .required("Address required!")
           .matches(/^[A-Za-z\d,. \-#()]{1,}$/, "Please ensure that your address is correct!"),
+        zipcode: Yup.string()
+          .required("Postal code required!")
+          .matches(/^[\d]{6}$/, "Please ensure that your postal code is correct!"),
         phoneno: Yup.string()
           .required("Phone number required!")
           .matches(/^[\d]{8}$/, "Please ensure that your phone number is correct!"),
@@ -105,6 +108,14 @@ export default function PersonalInfoForm() {
           autoComplete="off"
           label="Home Address"
           type="text"
+          disabled={showEdit}
+        />
+
+        <TextField
+          name="zipcode"
+          autoComplete="off"
+          label="Postal Code"
+          type="number"
           disabled={showEdit}
         />
 

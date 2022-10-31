@@ -20,8 +20,8 @@ const handleUserInfoUpdate = async (req, res) => {
       }
 
       const result = await pool.query(
-        "UPDATE Users SET name = $2, contact_no = $3, email = $4, address = $5 WHERE uid = $1",
-        [decoded.userid, req.body.name, req.body.phoneno, req.body.email, req.body.address]
+        "UPDATE Users SET name = $2, contact_no = $3, email = $4, address = $5, zipcode = $6 WHERE uid = $1",
+        [decoded.userid, req.body.name, req.body.phoneno, req.body.email, req.body.address, req.body.zipcode]
       );
 
       res.status(200);

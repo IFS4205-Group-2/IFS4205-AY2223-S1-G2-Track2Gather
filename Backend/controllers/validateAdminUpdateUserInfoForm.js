@@ -16,6 +16,9 @@ const formSchema = Yup.object({
   email: Yup.string()
     .required("Email address required!")
     .matches(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, "Please ensure that your email address is correct!"),
+  zipcode: Yup.string()
+    .required("Postal code required!")
+    .matches(/^[\d]{6}$/, "Please ensure that your postal code is correct!"),
   role: Yup.string()
     .required("Role required!")
     .matches(/^[23]{1}$/, "Please ensure that the chosen role is valid!"),

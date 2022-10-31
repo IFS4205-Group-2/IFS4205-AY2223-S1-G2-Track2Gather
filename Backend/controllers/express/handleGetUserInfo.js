@@ -16,7 +16,7 @@ const handleGetUserInfo = async (req, res) => {
   jwtVerify(token, process.env.JWT_SECRET)
     .then(async decoded => {
       const userInfos = await pool.query(
-        "SELECT name, OVERLAY(nric placing '*****' from 1 for 5) AS nric, address, contact_no, email FROM users WHERE uid = $1;",
+        "SELECT name, OVERLAY(nric placing '*****' from 1 for 5) AS nric, address, zipcode, contact_no, email FROM users WHERE uid = $1;",
         [decoded.userid]
       );
       

@@ -120,6 +120,8 @@ export default function AccountManagement() {
               <Th>Full Name</Th>
               <Th>Contact Number</Th>
               <Th>Home Address</Th>
+              <Th>Postal Code</Th>
+              <Th>Date of Birth</Th>
               <Th>Email Address</Th>
               <Th>Gender</Th>
               <Th>Role</Th>
@@ -137,6 +139,8 @@ export default function AccountManagement() {
                     <Td>{info.name}</Td>
                     <Td>{info.contact_no}</Td>
                     <Td>{info.address}</Td>
+                    <Td>{info.zipcode}</Td>
+                    <Td>{info.date_of_birth}</Td>
                     <Td>{info.email}</Td>
                     <Td>{info.gender}</Td>
                     <Td>{info.role}</Td>
@@ -188,7 +192,7 @@ export default function AccountManagement() {
           <ModalCloseButton />
           <ModalBody>
             <Formik
-              initialValues={{ name: "", nric: "", username: "", address: "", phoneno: "", email: "", password: "", gender: "" }}
+              initialValues={{ name: "", nric: "", username: "", address: "", phoneno: "", email: "", password: "", gender: "", zipcode: "", dateOfBirth: "" }}
               validationSchema={Yup.object({
                 nric: Yup.string()
                   .required("NRIC required!")
@@ -205,6 +209,9 @@ export default function AccountManagement() {
                 address: Yup.string()
                   .required("Address required!")
                   .matches(/^[A-Za-z\d,. \-#()]{1,}$/, "Please ensure that your address is correct!"),
+                zipcode: Yup.string()
+                  .required("Postal code required!")
+                  .matches(/^[\d]{6}$/, "Please ensure that your postal code is correct!"),
                 phoneno: Yup.string()
                   .required("Phone number required!")
                   .matches(/^[\d]{8}$/, "Please ensure that your phone number is correct!"),
@@ -282,6 +289,20 @@ export default function AccountManagement() {
                   autoComplete="off"
                   label="Home Address"
                   type="text"
+                />
+
+                <TextField
+                  name="zipcode"
+                  autoComplete="off"
+                  label="Postal Code"
+                  type="number"
+                />
+
+                <TextField
+                  name="dateOfBirth"
+                  autoComplete="off"
+                  label="Date of Birth"
+                  type="date"
                 />
 
                 <TextField

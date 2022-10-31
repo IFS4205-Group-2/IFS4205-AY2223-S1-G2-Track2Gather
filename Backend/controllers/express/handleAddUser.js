@@ -43,8 +43,8 @@ const handleAddUser = async (req, res) => {
       }
 
       const userResult = await pool.query(
-        "INSERT INTO Users (uid, nric, name, email, contact_no, gender, address, rid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);",
-        [userId, req.body.nric, req.body.name, req.body.email, req.body.phoneno, req.body.gender, req.body.address, req.body.role]
+        "INSERT INTO Users (uid, nric, name, email, contact_no, gender, address, rid, zipcode, date_of_birth) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);",
+        [userId, req.body.nric, req.body.name, req.body.email, req.body.phoneno, req.body.gender, req.body.address, req.body.role, req.body.zipcode, new Date(req.body.dateOfBirth)]
       );
       
       const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;

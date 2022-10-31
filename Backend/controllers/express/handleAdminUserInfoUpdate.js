@@ -24,8 +24,8 @@ const handleAdminUserInfoUpdate = async (req, res) => {
       }
 
       const userResult = await pool.query(
-        "UPDATE Users SET name = $2, contact_no = $3, email = $4, address = $5, gender = $6, rid = $7 WHERE uid = $1;",
-        [req.body.uid, req.body.name, req.body.phoneno, req.body.email, req.body.address, req.body.gender, req.body.role]
+        "UPDATE Users SET name = $2, contact_no = $3, email = $4, address = $5, gender = $6, rid = $7, zipcode = $8 WHERE uid = $1;",
+        [req.body.uid, req.body.name, req.body.phoneno, req.body.email, req.body.address, req.body.gender, req.body.role, req.body.zipcode]
       );
 
       const latestTestResult = req.body.testresult.length > 8 ? null : req.body.testresult;

@@ -16,7 +16,7 @@ const handleGetAllUserInfo = async (req, res) => {
   jwtVerify(token, process.env.JWT_SECRET)
     .then(async decoded => {
       const userInfos = await pool.query(
-        "SELECT u.uid, u.name, c.username, r.rname AS role, CAST(u.rid AS VARCHAR), u.gender, u.address, OVERLAY(nric placing '****' from 2 for 4) AS nric, u.contact_no, u.email, COALESCE(vaccination_history, 'No vaccination history') AS vaccination_history, COALESCE(recent_test_result, 'No test results') AS recent_test_result FROM users u, credentials c, roles r, medicalhistories m WHERE c.uid = u.uid AND r.rid = u.rid AND m.uid = u.uid AND r.rid <> 1;",
+        "SELECT u.uid, u.name, c.username, r.rname AS role, CAST(u.rid AS VARCHAR), u.gender, u.address, OVERLAY(nric placing '****' from 2 for 4) AS nric, u.contact_no, u.email, u.zipcode, SUBSTRING(CAST(u.date_of_birth AS VARCHAR), 1, 10) AS date_of_birth, COALESCE(vaccination_history, 'No vaccination history') AS vaccination_history, COALESCE(recent_test_result, 'No test results') AS recent_test_result FROM users u, credentials c, roles r, medicalhistories m WHERE c.uid = u.uid AND r.rid = u.rid AND m.uid = u.uid AND r.rid <> 1;",
       );
       
       const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
