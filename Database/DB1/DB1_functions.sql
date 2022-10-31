@@ -409,8 +409,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_all_health_data_researcher()
-RETURNS Table(id INT, vaccination VARCHAR(255)) AS $$
+RETURNS Table(id INT, vaccination VARCHAR(255), test_result VARCHAR(8)) AS $$
 BEGIN
-  RETURN QUERY (SELECT uid, vaccination_history FROM MedicalHistories);
+  RETURN QUERY (SELECT uid, vaccination_history, recent_test_result FROM MedicalHistories);
 END;
 $$ LANGUAGE plpgsql;
