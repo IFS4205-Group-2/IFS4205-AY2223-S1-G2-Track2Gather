@@ -8,11 +8,10 @@ import {
   Tr,
 } from "@chakra-ui/react";
 
-import { useQuery } from "@tanstack/react-query";
 import React, { useRef, useState } from "react";
 
 export default function TracingRecords() {
-  const cancelRef = useRef();
+  
   let originalDataRef = useRef([]);
   const [data, setData] = useState([]);
   const token = localStorage.getItem("token");
@@ -20,7 +19,7 @@ export default function TracingRecords() {
   useState(() => {
     async function fetchData() {
       try {
-        const res = await fetch(fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/tracing/records"), {
+        const res = await fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/tracing/records"), {
           credentials: "include",
           headers: {
             authorization: `Bearer ${token}`,
