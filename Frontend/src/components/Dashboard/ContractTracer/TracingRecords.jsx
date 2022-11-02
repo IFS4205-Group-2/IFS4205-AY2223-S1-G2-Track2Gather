@@ -12,49 +12,32 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 
 export default function TracingRecords() {
-  const { data: records, isSuccess } = useQuery(["records"], async () => {
-    const res = await fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/tracing/records");
-    const data = await res.json();
-    return data;
-  });
- 
   const [data, setData] = useState([]);
+  const token = localStorage.getItem("token");
 
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (isSuccess) {
-      setData(records);
-    }
-    return () => {};
-  }, [isSuccess, records]);
-
-  // codes for sort direction
-  const [tokenid1, setInf1] = useState(0);
-  const [time1, setInf2] = useState(0);
-  const [location1, setInf3] = useState(0);
-  const [tokenid2, setInf4] = useState(0);
-  const [time2, setInf5] = useState(0);
- 
-
-
-  const getSortedData = (sortBy, val) => {
-    if (!isSuccess) return [];
-    const dataToSort = records.slice().sort((a, b) => {
-      let aVal = a[sortBy];
-      let bVal = b[sortBy];
-      switch (typeof aVal) {
-        case "string":
-          return val ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-        case "number":
-          return val ? aVal - bVal : bVal - aVal;
-        default:
-          throw new Error("Unsupported value to sort by");
+  useState(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch(fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/tracing/records", {
+          credentials: "include",
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+        const { status_code, tokenInfos } = await res.json();
+        if (status_code === 0) {
+          originalDataRef.current = tokenInfos;
+          setData(records);
+          return;
+        }
+      } catch(e) {
+        console.log(e);
+        return;
       }
-    });
-    setCount(count + 1);
-    setData(dataToSort);
-  };
+    }
+    fetchData();
+  }, [token]);
+
 
   const filterTable = (e) => {
     if (!isSuccess) return [];
@@ -109,64 +92,38 @@ export default function TracingRecords() {
         <Table variant="simple" colorScheme={"facebook"}>
           <Thead>
             <Tr>
-              <Th
-                onClick={() => {
-                  getSortedData("tokenid1", tokenid1);
-                  setInf1(!tokenid1);
-                }}
-                style={{ cursor: "pointer" }}
-              >
+              <Th>
                 Token ID
               </Th>
-              <Th
-                onClick={() => {
-                  getSortedData("time1", time1);
-                  setInf2(!time1);
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                Time 
+              <Th>
+                 Time 
               </Th>
-              <Th
-                onClick={() => {
-                  getSortedData("location1", location1);
-                  setInf3(!location1);
-                }}
-                style={{ cursor: "pointer" }}
-              >
+              <Th>
                 Location
               </Th>
-              <Th
-                onClick={() => {
-                  getSortedData("tokenid2", tokenid2);
-                  setInf4(!tokenid2);
-                }}
-                style={{ cursor: "pointer" }}
-              >
+              <Th>
                 Token ID 2
               </Th>
-              <Th
-                onClick={() => {
-                  getSortedData("time2", time2);
-                  setInf5(!time2);
-                }}
-                style={{ cursor: "pointer" }}
-              >
+              <Th>
                 Time 2
               </Th>
             </Tr>
           </Thead>
           <Tbody>
-            {data.map((item, i) => (
-              <Tr key={i.toString()}>
-                <Td>{item.tokenid1}</Td>
-                <Td>{item.time1}</Td>
-                <Td>{item.location1}</Td>
-                <Td>{item.tokenid2}</Td>
-                <Td>{item.time2}</Td>
-                
-              </Tr>
-            ))}
+            {
+              data.map((info, index) => {
+                return (
+                  <Tr key={`${info.tokenID}-${index}`}>
+                    <Td>{item.tokenid1}</Td>
+                    <Td>{item.time1}</Td>
+                    <Td>{item.location1}</Td>
+                    <Td>{item.tokenid2}</Td>
+                    <Td>{item.time2}</Td>
+  
+                  </Tr>
+                )
+              })
+            }
           </Tbody>
         </Table>
       </TableContainer>
