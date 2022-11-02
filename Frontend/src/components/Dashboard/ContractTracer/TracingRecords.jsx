@@ -9,9 +9,11 @@ import {
 } from "@chakra-ui/react";
 
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 
 export default function TracingRecords() {
+  const cancelRef = useRef();
+  let originalDataRef = useRef([]);
   const [data, setData] = useState([]);
   const token = localStorage.getItem("token");
 
@@ -24,9 +26,9 @@ export default function TracingRecords() {
             authorization: `Bearer ${token}`,
           },
         });
-        const { status_code, tokenInfos } = await res.json();
+        const { status_code, records } = await res.json();
         if (status_code === 0) {
-          originalDataRef.current = tokenInfos;
+          originalDataRef.current = records;
           setData(records);
           return;
         }
