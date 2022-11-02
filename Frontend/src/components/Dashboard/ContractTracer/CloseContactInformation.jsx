@@ -8,7 +8,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 
 export default function CloseContactInformation() {
 
