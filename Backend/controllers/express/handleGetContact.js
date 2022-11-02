@@ -1,5 +1,5 @@
 const { jwtVerify, getJwt } = require("../jwt/jwtAuth");
-const pool = require("../../db2");
+const pool = require("../../db");
 require("dotenv").config();
 const { Logtail } = require("@logtail/node");
 const logtail = new Logtail(process.env.LOGTAIL_BACKEND_SOURCE_TOKEN);
