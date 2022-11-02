@@ -3,7 +3,7 @@ const router = express.Router();
 const {
  handleGetContact,
 } = require("../controllers/contactController");
-
-router.get('/contacts', handleGetContact);
+const validateContactTracerRole = require("../controllers/validateContactTracerRole");
+router.get('/contacts', validateContactTracerRole, handleGetContact);
 
 module.exports = router;

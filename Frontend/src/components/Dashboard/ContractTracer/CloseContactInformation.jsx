@@ -8,75 +8,52 @@ import {
   Tr,
 } from "@chakra-ui/react";
 
-import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 
 export default function CloseContactInformation() {
-  const { data: contacts, isSuccess } = useQuery(["contacts"], async () => {
-    const res = await fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/tracing/contacts");
-    const data = await res.json();
-    return data;
-  });
- 
+
+  let originalDataRef = useRef([]);
   const [data, setData] = useState([]);
+  const token = localStorage.getItem("token");
 
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (isSuccess) {
-      setData(contacts);
-    }
-    return () => {};
-  }, [isSuccess, contacts]);
-
-  // codes for sort direction
-  const [name, setInf1] = useState(0);
-  const [email, setInf2] = useState(0);
-  const [contact_no, setInf3] = useState(0);
-  const [gender, setInf4] = useState(0);
-  const [zipcode, setInf5] = useState(0);
-  const [tid, setInf6] = useState(0);
- 
-
-  const getSortedData = (sortBy, val) => {
-    if (!isSuccess) return [];
-    const dataToSort = contacts.slice().sort((a, b) => {
-      let aVal = a[sortBy];
-      let bVal = b[sortBy];
-      switch (typeof aVal) {
-        case "string":
-          return val ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-        case "number":
-          return val ? aVal - bVal : bVal - aVal;
-        default:
-          throw new Error("Unsupported value to sort by");
+  useState(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/tracing/contacts', {
+          credentials: "include",
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+        const { status_code, contacts } = await res.json();
+        if (status_code === 0) {
+          originalDataRef.current = contacts;
+          setData(contacts);
+          return;
+        }
+      } catch(e) {
+        console.log(e);
+        return;
       }
-    });
-    setCount(count + 1);
-    setData(dataToSort);
-  };
+    }
+    fetchData();
+  }, [token]);
+ 
+  const filterData = (target) => {
+    const filteredData = originalDataRef.current.filter(row => row.name.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.email.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.contact_no.toLocaleLowerCase().includes(target.toLocaleLowerCase()) 
+      || row.gender.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.tid.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.zipcode.toLocaleLowerCase().includes(target.toLocaleLowerCase()));
 
-  const filterTable = (e) => {
-    if (!isSuccess) return [];
-    let filterFunc = (item) => {
-      if (
-        item.name.indexOf(e) >=0 ||
-        item.email.indexOf(e) >=0 ||
-        item.contact_no.toString().indexOf(e) >=0 ||
-        item.gender.indexOf(e) >=0 ||
-        item?.tid?.toString().indexOf(e) >=0  ||
-        item.zipcode.toString().indexOf(e) >=0 
-        )
-        return true;
-    };
-
-    let dataForState = contacts.filter((item) => filterFunc(item));
-    if(dataForState.length === 0 || dataForState === ''){
-      setData(data);
+    if (filteredData.length === 0 || target === '') {
+      setData(originalDataRef.current);
       return;
     }
-    setData(dataForState);
-  };
+    setData(filteredData);
+  }
+
 
 
   return (
@@ -91,7 +68,7 @@ export default function CloseContactInformation() {
         <p>Search for:</p>
         <input
           type="text"
-          onChange={(e) => filterTable(e.target.value)}
+          onChange={(e) => filterData(e.target.value)}
           placeholder="Search"
           style={{
             background: "rgba(0,0,0,0.2)",
@@ -108,73 +85,43 @@ export default function CloseContactInformation() {
         <Table variant="simple" colorScheme={"facebook"}>
           <Thead>
             <Tr>
-              <Th
-                onClick={() => {
-                  getSortedData("name", name);
-                  setInf1(!name);
-                }}
-                style={{ cursor: "pointer" }}
-              >
+              <Th>
                 Name
               </Th>
-              <Th
-                onClick={() => {
-                  getSortedData("email", email);
-                  setInf2(!email);
-                }}
-                style={{ cursor: "pointer" }}
-              >
+              <Th>
                 Email
               </Th>
-              <Th
-                onClick={() => {
-                  getSortedData("contact_no", contact_no);
-                  setInf3(!contact_no);
-                }}
-                style={{ cursor: "pointer" }}
-              >
+              <Th>
                 Contact Number
               </Th>
-              <Th
-                onClick={() => {
-                  getSortedData("gender", gender);
-                  setInf4(!gender);
-                }}
-                style={{ cursor: "pointer" }}
-              >
+              <Th>
                 Gender
               </Th>
-              <Th
-                onClick={() => {
-                  getSortedData("zipcode", zipcode);
-                  setInf5(!zipcode);
-                }}
-                style={{ cursor: "pointer" }}
-              >
+              <Th>
                 Zip Code
               </Th>
-              <Th
-                onClick={() => {
-                  getSortedData("tid", tid);
-                  setInf6(!tid);
-                }}
-                style={{ cursor: "pointer" }}
-              >
+              <Th>
                 Token ID
               </Th>
             </Tr>
           </Thead>
           <Tbody>
-            {data.map((item, i) => (
-              <Tr key={i.toString()}>
-                <Td>{item.name}</Td>
-                <Td>{item.email}</Td>
-                <Td>{item.contact_no}</Td>
-                <Td>{item.gender}</Td>
-                <Td>{item.zipcode}</Td>
-                <Td>{item.tid}</Td>
-              </Tr>
-            ))}
+            {
+              data.map((item, index) => {
+                return (
+                  <Tr key={`${item.tokenID}-${index}`}>
+                    <Td>{item.name}</Td>
+                    <Td>{item.email}</Td>
+                    <Td>{item.contact_no}</Td>
+                    <Td>{item.gender}</Td>
+                    <Td>{item.zipcode}</Td>
+                    <Td>{item.tid}</Td>
+  
+                  </Tr>
+                )
+              })
+            }
+          
           </Tbody>
         </Table>
       </TableContainer>
