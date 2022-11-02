@@ -106,7 +106,7 @@ export default function TracingRecords() {
             {
               data.map((item, index) => {
                 return (
-                  <Tr key={`${info.tokenID}-${index}`}>
+                  <Tr key={`${item.tokenID}-${index}`}>
                     <Td>{item.tokenid1}</Td>
                     <Td>{item.time1}</Td>
                     <Td>{item.location1}</Td>
