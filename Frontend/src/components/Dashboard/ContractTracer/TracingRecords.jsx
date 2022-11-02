@@ -104,7 +104,7 @@ export default function TracingRecords() {
           </Thead>
           <Tbody>
             {
-              data.map((info, index) => {
+              data.map((item, index) => {
                 return (
                   <Tr key={`${info.tokenID}-${index}`}>
                     <Td>{item.tokenid1}</Td>
