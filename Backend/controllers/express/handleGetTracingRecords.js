@@ -24,7 +24,7 @@ const handleGetTracingRecords = async (req, res) => {
         ipaddress: ip
       });
 
-      res.json({ status_code: 0, ...records.rows[0] });
+      res.json({ status_code: 0, records: records.rows });
     })
     .catch(() => {
       res.json({ status_code: -1 });
