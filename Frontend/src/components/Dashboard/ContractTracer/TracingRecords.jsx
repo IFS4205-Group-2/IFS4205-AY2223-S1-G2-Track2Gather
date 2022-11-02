@@ -40,28 +40,19 @@ export default function TracingRecords() {
     fetchData();
   }, [token]);
 
-
-  const filterTable = (e) => {
-    if (!isSuccess) return [];
-    let filterFunc = (item) => {
-      if (
-        item?.tokenid1?.toString().indexOf(e) >= 0 ||
-        item.time1.toString().indexOf(e) >= 0 ||
-        item.location1.indexOf(e) >=0 ||
-        item?.tokenid2?.toString().indexOf(e) >= 0 ||
-        item.time2.toString().indexOf(e) >= 0 
-        
-      )
-        return true;
-    };
-
-    let dataForState = records.filter((item) => filterFunc(item));
-    if(dataForState.length === 0 || dataForState === ''){
-      setData(data);
+  const filterData = (target) => {
+    const filteredData = originalDataRef.current.filter(row => row.tokenid1.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.time1.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.location1.toLocaleLowerCase().includes(target.toLocaleLowerCase()) 
+      || row.tokenid2.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      || row.time2.toLocaleLowerCase().includes(target.toLocaleLowerCase()));
+    if (filteredData.length === 0 || target === '') {
+      setData(originalDataRef.current);
       return;
     }
-    setData(dataForState);
-  };
+    setData(filteredData);
+  }
+
 
   console.log(data);
   
@@ -77,7 +68,7 @@ export default function TracingRecords() {
         <p>Search for:</p>
         <input
           type="text"
-          onChange={(e) => filterTable(e.target.value)}
+          onChange={(e) => filterData(e.target.value)}
           placeholder="Search for Infectants and Time..."
           style={{
             background: "rgba(0,0,0,0.2)",
