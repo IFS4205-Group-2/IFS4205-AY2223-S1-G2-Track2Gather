@@ -11,7 +11,7 @@ import {
 import React, { useRef, useState } from "react";
 
 export default function TracingRecords() {
-  
+
   let originalDataRef = useRef([]);
   const [data, setData] = useState([]);
   const token = localStorage.getItem("token");
@@ -19,7 +19,7 @@ export default function TracingRecords() {
   useState(() => {
     async function fetchData() {
       try {
-        const res = await fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/tracing/records"), {
+        const res = await fetch('https://ifs4205-gp02-1.comp.nus.edu.sg/tracing/records', {
           credentials: "include",
           headers: {
             authorization: `Bearer ${token}`,
