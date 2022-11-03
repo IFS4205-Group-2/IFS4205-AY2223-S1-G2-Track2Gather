@@ -26,6 +26,7 @@ module.exports.rateLimiter =
     else next();
     } catch (e) {
       console.log(e);
+      next();
     }
   };
 
