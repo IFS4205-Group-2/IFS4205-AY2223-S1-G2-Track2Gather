@@ -11,7 +11,6 @@ const Login = () => {
   const { setUser } = useContext(AccountContext);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
   return (
       <Formik
@@ -26,39 +25,36 @@ const Login = () => {
         })} 
       
         onSubmit={(values, actions) => {
-          if (token != null) {
-            navigate("/dashboard");
-          } else {
-            const vals = { ...values };
-            actions.resetForm();
-            fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/auth/login", { //to be changed
-              method: "POST",
-              credentials: "include",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(vals),
-            })
-            .catch(err => {
+          const vals = { ...values };
+          actions.resetForm();
+          localStorage.removeItem("token");
+          fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/auth/login", { //to be changed
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(vals),
+          })
+          .catch(err => {
+            return;
+          })
+          .then(res => {
+            if (!res || !res.ok || res.status >= 400) {
               return;
-            })
-            .then(res => {
-              if (!res || !res.ok || res.status >= 400) {
-                return;
-              }
-              return res.json();
-            })
-            .then(data => {
-              if (!data) return;
-              setUser({ ...data });
-              if (data.status) {
-                setError(data.status);
-              } else if (data.loggedIn) {
-                localStorage.setItem("token", data.token);
-                navigate("/dashboard");
-              }
-            });
-          }
+            }
+            return res.json();
+          })
+          .then(data => {
+            if (!data) return;
+            setUser({ ...data });
+            if (data.status) {
+              setError(data.status);
+            } else if (data.loggedIn) {
+              localStorage.setItem("token", data.token);
+              navigate("/dashboard");
+            }
+          });
         }}
       >
         <VStack
