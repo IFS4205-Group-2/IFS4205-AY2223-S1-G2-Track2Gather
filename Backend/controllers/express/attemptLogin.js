@@ -7,7 +7,7 @@ const { Logtail } = require("@logtail/node");
 const logtail = new Logtail(process.env.LOGTAIL_BACKEND_SOURCE_TOKEN);
 
 const attemptLogin = async (req, res) => {
-  if (req.connection.remoteAddress != "https://ifs4205-gp02-1.comp.nus.edu.sg") {
+  if (req.headers['x-forwarded-host'] != "ifs4205-gp02-1.comp.nus.edu.sg") {
     res.json({ loggedIn: false, status: "Unable to process request not from proxy" });
   } else {
     const potentialLogin = await pool.query(
