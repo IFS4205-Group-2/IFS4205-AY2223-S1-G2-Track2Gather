@@ -6,6 +6,7 @@ module.exports = function(app) {
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
+      xfwd: true,
     })
   );
   app.use(
@@ -13,6 +14,7 @@ module.exports = function(app) {
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
+      xfwd: true,
     })
   );
   app.use(
@@ -20,6 +22,7 @@ module.exports = function(app) {
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
+      xfwd: true,
     })
   );
   app.use(
@@ -27,6 +30,7 @@ module.exports = function(app) {
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
+      xfwd: true,
     })
   );
   app.use(
@@ -34,6 +38,7 @@ module.exports = function(app) {
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
+      xfwd: true,
     })
   );
   app.use(
@@ -41,6 +46,7 @@ module.exports = function(app) {
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
+      xfwd: true,
     })
   );
   app.use(
@@ -48,6 +54,7 @@ module.exports = function(app) {
     createProxyMiddleware({
       target: 'http://172.25.76.159:4000',
       changeOrigin: true,
+      xfwd: true,
     })
   );
 };
