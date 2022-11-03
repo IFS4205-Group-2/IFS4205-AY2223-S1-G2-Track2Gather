@@ -5,6 +5,7 @@ const logtail = new Logtail(process.env.LOGTAIL_BACKEND_SOURCE_TOKEN);
 
 module.exports.rateLimiter =
   (secondsLimit, limitAmount) => async (req, res, next) => {
+    try {
     const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     [response] = await redisClient
       .multi()
@@ -23,5 +24,8 @@ module.exports.rateLimiter =
       });
     }
     else next();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
