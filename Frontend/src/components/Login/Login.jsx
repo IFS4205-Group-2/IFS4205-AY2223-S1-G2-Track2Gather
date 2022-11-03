@@ -11,7 +11,7 @@ const Login = () => {
   const { setUser } = useContext(AccountContext);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  const token = localStorage.getItem("token");
 
   return (
       <Formik
@@ -26,16 +26,19 @@ const Login = () => {
         })} 
       
         onSubmit={(values, actions) => {
-          const vals = { ...values };
-          actions.resetForm();
-          fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/auth/login", { //to be changed
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(vals),
-          })
+          if (token != null) {
+            navigate("/dashboard");
+          } else {
+            const vals = { ...values };
+            actions.resetForm();
+            fetch("https://ifs4205-gp02-1.comp.nus.edu.sg/auth/login", { //to be changed
+              method: "POST",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(vals),
+            })
             .catch(err => {
               return;
             })
@@ -55,6 +58,7 @@ const Login = () => {
                 navigate("/dashboard");
               }
             });
+          }
         }}
       >
         <VStack
