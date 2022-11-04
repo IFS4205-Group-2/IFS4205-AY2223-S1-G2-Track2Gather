@@ -14,37 +14,33 @@ const attemptLogin = async (req, res) => {
       "SELECT c.uid, c.username, c.password_hash, u.rid FROM credentials c, users u WHERE c.uid = u.uid AND c.username = $1;",
       [req.body.username]
     );
-   
-    if (potentialLogin.rowCount > 0) {
-      const isSamePass = await bcrypt.compare(
-        req.body.password,
-        potentialLogin.rows[0].password_hash
-      );
-      if (isSamePass) {
-        const ip = req.headers["x-forwarded-for"];
-        logtail.info("User " + req.body.username + " in via login page.", {
-          ipaddress: ip
-        });
-  
-        jwtSign(
-          {
-            username: req.body.username,
-            userid: potentialLogin.rows[0].uid,
-            roleid: potentialLogin.rows[0].rid,
-          },
-          process.env.JWT_SECRET,
-          { expiresIn: "20mins" }
-        )
-          .then(token => {
-            res.json({ loggedIn: true, token });
-          })
-          .catch(err => {
-            console.log(err);
-            res.json({ loggedIn: false, status: "Try again later" });
-          }); 
-      } else {
-        res.json({ loggedIn: false, status: "Wrong username or password!" });
-      }
+    const isSamePass = await bcrypt.compare(
+      req.body.password,
+      potentialLogin.rows[0].password_hash
+    );
+
+    if (potentialLogin.rowCount > 0 && isSamePass) {
+      const ip = req.headers["x-forwarded-for"];
+      logtail.info("User " + req.body.username + " in via login page.", {
+        ipaddress: ip
+      });
+
+      jwtSign(
+        {
+          username: req.body.username,
+          userid: potentialLogin.rows[0].uid,
+          roleid: potentialLogin.rows[0].rid,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "20mins" }
+      )
+        .then(token => {
+          res.json({ loggedIn: true, token });
+        })
+        .catch(err => {
+          console.log(err);
+          res.json({ loggedIn: false, status: "Try again later" });
+        }); 
     } else {
       res.json({ loggedIn: false, status: "Wrong username or password!" });
     }
