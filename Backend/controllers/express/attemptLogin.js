@@ -49,7 +49,7 @@ const attemptLogin = async (req, res) => {
       //Run dummy bcrypt command
       await bcrypt.compare(
         req.body.password,
-        "$2b$10$jrUVh8rzQ0Hx99XZU/MdKO9U6X/CHUHeebCS82YiAFAqVKoEylSoO"
+        process.env.DUMMY_BCRYPT_HASH
       );      
       res.json({ loggedIn: false, status: "Wrong username or password!" });
     }
