@@ -5,7 +5,7 @@ import { useContext, useState } from "react";
 import { AccountContext } from "../AccountContext";
 import * as Yup from "yup";
 import TextField from "../TextField";
-import ResearcherCSV from "../ResearcherCSV";
+
 
 const Login = () => {
   const { setUser } = useContext(AccountContext);
@@ -89,7 +89,7 @@ const Login = () => {
               Log In
             </Button>
           </ButtonGroup>
-          <ResearcherCSV />
+          
         </VStack>
        
         
