@@ -3,7 +3,7 @@ require("dotenv").config();
 const { Logtail } = require("@logtail/node");
 const logtail = new Logtail(process.env.LOGTAIL_BACKEND_SOURCE_TOKEN);
 
-const validateContactTracerRole = async (req, res, next) => {
+const validateResearcherRole = async (req, res, next) => {
 
   const token = getJwt(req);
 
@@ -14,11 +14,11 @@ const validateContactTracerRole = async (req, res, next) => {
 
   jwtVerify(token, process.env.JWT_SECRET)
     .then(async decoded => {
-      if (decoded.roleid === 2) {
+      if (decoded.roleid === 4) {
         next();
       } else {
         const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-        logtail.warn(`User ${decoded.username} with role ID ${decoded.roleid} is trying to access contact tracer api.`, {
+        logtail.warn(`User ${decoded.username} with role ID ${decoded.roleid} is trying to access research api.`, {
           ipaddress: ip
         });
         res.status(400).send();
@@ -29,4 +29,4 @@ const validateContactTracerRole = async (req, res, next) => {
     });
 };
 
-module.exports = validateContactTracerRole;
+module.exports = validateResearcherRole;
