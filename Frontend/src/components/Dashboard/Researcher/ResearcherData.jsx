@@ -25,7 +25,7 @@ import {
               authorization: `Bearer ${token}`,
             },
           });
-          const { status_code, records } = await res.json();
+          const { status_code, research } = await res.json();
           if (status_code === 0) {
             originalDataRef.current = research;
             setData(research);
