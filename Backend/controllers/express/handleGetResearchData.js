@@ -16,7 +16,7 @@ const handleGetResearchData = async (req, res) => {
   jwtVerify(token, process.env.JWT_SECRET)
     .then(async decoded => {
       const research = await pool.query(
-        "select us.gender gender, extract(year from us.date_of_birth) birthday, us.zipcode, mh.vaccination_history vaccination, mh.recent_test_result testresult from users us left join medicalhistories mh on us.uid = mh.uid;"
+        "select us.gender gender, extract(year from us.date_of_birth) birthday, us.zipcode postal, mh.vaccination_history vaccination, mh.recent_test_result testresult from users us left join medicalhistories mh on us.uid = mh.uid;"
       );
       
       const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;

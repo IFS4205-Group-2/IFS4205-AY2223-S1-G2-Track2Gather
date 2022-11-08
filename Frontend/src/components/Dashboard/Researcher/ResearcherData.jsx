@@ -88,7 +88,7 @@ import {
                   Gender
                 </Th>
                 <Th>
-                   Birthday 
+                   Year of Birth 
                 </Th>
                 <Th>
                   Postal Code
