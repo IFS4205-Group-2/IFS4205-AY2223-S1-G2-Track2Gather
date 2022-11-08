@@ -1,5 +1,6 @@
 import UserDashboard from "../components/Dashboard/User/UserDashboard";
 import ContactTracerDashboard from "../components/Dashboard/ContractTracer/ContactTracerDashboard";
+import ResearcherData from "../components/Dashboard/Researcher/ResearcherData";
 import NavBar from "../components/Nav/NavBar";
 import { USER_ROLES } from "../constants";
 import HealthAuthorityDashboard from "../components/Dashboard/HealthAuthority/HealthAuthorityDashboard";
@@ -41,7 +42,9 @@ export default function Dashboard() {
             ? <ContactTracerDashboard />
             : userRole === USER_ROLES.healthAuthority
               ? <HealthAuthorityDashboard />
-              : null
+              : userRole === USER_ROLES.researcher
+              ? <ResearcherData />
+                : null
         }
       </div>
     </>
