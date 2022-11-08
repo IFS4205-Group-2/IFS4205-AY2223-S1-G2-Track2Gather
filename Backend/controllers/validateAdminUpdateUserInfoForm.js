@@ -21,7 +21,7 @@ const formSchema = Yup.object({
     .matches(/^[\d]{6}$/, "Please ensure that your postal code is correct!"),
   role: Yup.string()
     .required("Role required!")
-    .matches(/^[23]{1}$/, "Please ensure that the chosen role is valid!"),
+    .matches(/^[234]{1}$/, "Please ensure that the chosen role is valid!"),
   gender: Yup.string()
     .required("Gender required!")
     .matches(/^Male|Female$/, "Please ensure that the chosen gender is valid!"),

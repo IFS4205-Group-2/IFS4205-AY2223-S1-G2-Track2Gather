@@ -168,7 +168,7 @@ export default function UserInformation() {
                       .matches(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, "Please ensure that your email address is correct!"),
                     role: Yup.string()
                       .required("Role required!")
-                      .matches(/^[23]{1}$/, "Please ensure that the chosen role is valid!"),
+                      .matches(/^[234]{1}$/, "Please ensure that the chosen role is valid!"),
                     zipcode: Yup.string()
                       .required("Postal code required!")
                       .matches(/^[\d]{6}$/, "Please ensure that your postal code is correct!"),
@@ -301,6 +301,10 @@ export default function UserInformation() {
                         <label>
                           <Field type="radio" name="role" value="2" disabled={showEdit}/>
                           <span style={{"padding-left": "10px"}}>Contact Tracer</span>
+                        </label>
+                        <label>
+                          <Field type="radio" name="role" value="4" disabled={showEdit}/>
+                          <span style={{"padding-left": "10px"}}>Researcher</span>
                         </label>
                       </Stack>
                     </RadioGroup>
