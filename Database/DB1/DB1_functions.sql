@@ -232,7 +232,9 @@ RETURNS SETOF Users AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 0) THEN RAISE EXCEPTION 'Only admin can use this procedure.';
   ELSE RETURN QUERY (SELECT * FROM Users);
   END IF;
@@ -244,7 +246,9 @@ RETURNS SETOF Roles AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 0) THEN RAISE EXCEPTION 'Only admin can use this procedure.';
   ELSE RETURN QUERY (SELECT * FROM Roles);
   END IF;
@@ -256,7 +260,9 @@ RETURNS SETOF Permissions AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 0) THEN RAISE EXCEPTION 'Only admin can use this procedure.';
   ELSE RETURN QUERY (SELECT * FROM Permissions);
   END IF;
@@ -268,7 +274,9 @@ RETURNS SETOF RolePermissions AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 0) THEN RAISE EXCEPTION 'Only admin can use this procedure.';
   ELSE RETURN QUERY (SELECT * FROM RolePermissions);
   END IF;
@@ -280,7 +288,9 @@ RETURNS SETOF Tokens AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 0) THEN RAISE EXCEPTION 'Only admin can use this procedure.';
   ELSE RETURN QUERY (SELECT * FROM Tokens);
   END IF;
@@ -292,7 +302,9 @@ RETURNS SETOF Credentials AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 0) THEN RAISE EXCEPTION 'Only admin can use this procedure.';
   ELSE RETURN QUERY (SELECT * FROM Credentials);
   END IF;
@@ -304,7 +316,9 @@ RETURNS SETOF MedicalHistories AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 0) THEN RAISE EXCEPTION 'Only admin can use this procedure.';
   ELSE RETURN QUERY (SELECT * FROM MedicalHistories);
   END IF;
@@ -316,9 +330,11 @@ RETURNS SETOF Users AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 0) THEN RAISE EXCEPTION 'Only admin can use this procedure.';
-  ELSE RETURN QUERY (SELECT * FROM Users WHERE uid = userID);
+  ELSE RETURN QUERY (SELECT * FROM Users WHERE uid = userId);
   END IF;
 END;
 $$ LANGUAGE plpgsql;
@@ -332,9 +348,11 @@ RETURNS SETOF Users AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 3) THEN RAISE EXCEPTION 'Only registered public user can use this procedure.';
-  ELSE RETURN QUERY (SELECT * FROM Users WHERE uid = userID);
+  ELSE RETURN QUERY (SELECT * FROM Users WHERE uid = userId);
   END IF;
 END;
 $$ LANGUAGE plpgsql;
@@ -349,7 +367,9 @@ RETURNS Table(token_id MACADDR, user_id INT, user_name VARCHAR(255), user_email 
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 2) THEN RAISE EXCEPTION 'Only contact tracer can use this procedure.';
   ELSE RETURN QUERY (SELECT tid, uid, name, email, contact_no FROM Users);
   END IF;
@@ -361,7 +381,9 @@ RETURNS SETOF Users AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 2) THEN RAISE EXCEPTION 'Only contact tracer can use this procedure.';
   ELSE RETURN QUERY (SELECT * FROM Users WHERE uid = userID);
   END IF;
@@ -378,7 +400,9 @@ RETURNS SETOF MedicalHistories AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 1) THEN RAISE EXCEPTION 'Only health authorities can use this procedure.';
   ELSE RETURN QUERY (SELECT * FROM MedicalHistories);
   END IF;
@@ -390,7 +414,9 @@ RETURNS SETOF Users AS $$
 DECLARE
   role INT;
 BEGIN
-  SELECT rid INTO role FROM Users WHERE uid = userID;
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
   IF (role != 1) THEN RAISE EXCEPTION 'Only health authorities can use this procedure.';
   ELSE RETURN QUERY (SELECT * FROM Users WHERE uid = userID);
   END IF;
@@ -398,19 +424,33 @@ END;
 $$ LANGUAGE plpgsql;
 
 --Procedures for researchers
-DROP FUNCTION IF EXISTS get_all_user_data_researcher();
-DROP FUNCTION IF EXISTS get_all_health_data_researcher();
+DROP FUNCTION IF EXISTS get_all_user_data_researcher(integer);
+DROP FUNCTION IF EXISTS get_all_health_data_researcher(integer);
 
-CREATE OR REPLACE FUNCTION get_all_user_data_researcher()
+CREATE OR REPLACE FUNCTION get_all_user_data_researcher(userId INT)
 RETURNS Table(id INT, user_gender VARCHAR(6), year_of_birth text, postal_code INT) AS $$
+DECLARE
+  role INT;
 BEGIN
-  RETURN QUERY (SELECT uid, gender, to_char(date_of_birth, 'YYYY'), zipcode FROM Users);
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
+  IF (role != 4) THEN RAISE EXCEPTION 'Only researchers can use this procedure.';
+  ELSE RETURN QUERY (SELECT uid, gender, to_char(date_of_birth, 'YYYY'), zipcode FROM Users);
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION get_all_health_data_researcher()
+CREATE OR REPLACE FUNCTION get_all_health_data_researcher(userId INT)
 RETURNS Table(id INT, vaccination VARCHAR(255), test_result VARCHAR(8)) AS $$
+DECLARE
+  role INT;
 BEGIN
-  RETURN QUERY (SELECT uid, vaccination_history, recent_test_result FROM MedicalHistories);
+  IF NOT EXISTS (SELECT * FROM Users WHERE uid = userId) THEN RAISE EXCEPTION 'This user does not exist';
+  END IF;
+  SELECT rid INTO role FROM Users WHERE uid = userId;
+  IF (role != 4) THEN RAISE EXCEPTION 'Only researchers can use this procedure.';
+  ELSE RETURN QUERY (SELECT uid, vaccination_history, recent_test_result FROM MedicalHistories);
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
